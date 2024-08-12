@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="CLI Arguments" tests="42" assertions="131" errors="2" failures="0" skipped="0" time="10.949868">
+    <testsuite name="API\AddStoreTest" file="D:\xampp\htdocs\store\server\tests\AddStoreTest.php" tests="2" assertions="8" errors="0" failures="0" skipped="0" time="0.583026">
+      <testcase name="testSuccessfulStoreCreation" file="D:\xampp\htdocs\store\server\tests\AddStoreTest.php" line="71" class="API\AddStoreTest" classname="API.AddStoreTest" assertions="5" time="0.455685"/>
+      <testcase name="testUserAccountTypeLimit" file="D:\xampp\htdocs\store\server\tests\AddStoreTest.php" line="129" class="API\AddStoreTest" classname="API.AddStoreTest" assertions="3" time="0.127340"/>
+    </testsuite>
+    <testsuite name="API\CenterAddTest" file="D:\xampp\htdocs\store\server\tests\CenterAddTest.php" tests="3" assertions="12" errors="0" failures="0" skipped="0" time="0.460172">
+      <testcase name="testSuccessfulStoreCenterCreation" file="D:\xampp\htdocs\store\server\tests\CenterAddTest.php" line="78" class="API\CenterAddTest" classname="API.CenterAddTest" assertions="6" time="0.146779"/>
+      <testcase name="testStoreNotFound" file="D:\xampp\htdocs\store\server\tests\CenterAddTest.php" line="128" class="API\CenterAddTest" classname="API.CenterAddTest" assertions="3" time="0.111329"/>
+      <testcase name="testMissingRequiredFields" file="D:\xampp\htdocs\store\server\tests\CenterAddTest.php" line="163" class="API\CenterAddTest" classname="API.CenterAddTest" assertions="3" time="0.202065"/>
+    </testsuite>
+    <testsuite name="API\CenterUpdateTest" file="D:\xampp\htdocs\store\server\tests\CenterUpdateTest.php" tests="3" assertions="13" errors="0" failures="0" skipped="0" time="0.629558">
+      <testcase name="testSuccessfulStoreCenterUpdate" file="D:\xampp\htdocs\store\server\tests\CenterUpdateTest.php" line="78" class="API\CenterUpdateTest" classname="API.CenterUpdateTest" assertions="7" time="0.280858"/>
+      <testcase name="testStoreCenterNotFound" file="D:\xampp\htdocs\store\server\tests\CenterUpdateTest.php" line="140" class="API\CenterUpdateTest" classname="API.CenterUpdateTest" assertions="3" time="0.237995"/>
+      <testcase name="testMissingRequiredFields" file="D:\xampp\htdocs\store\server\tests\CenterUpdateTest.php" line="175" class="API\CenterUpdateTest" classname="API.CenterUpdateTest" assertions="3" time="0.110704"/>
+    </testsuite>
+    <testsuite name="API\CurrencyTest" file="D:\xampp\htdocs\store\server\tests\CurrencyTest.php" tests="2" assertions="6" errors="0" failures="0" skipped="0" time="0.805823">
+      <testcase name="testGetAllCurrencySuccess" file="D:\xampp\htdocs\store\server\tests\CurrencyTest.php" line="53" class="API\CurrencyTest" classname="API.CurrencyTest" assertions="3" time="0.512952"/>
+      <testcase name="testGetAllCurrencyNoData" file="D:\xampp\htdocs\store\server\tests\CurrencyTest.php" line="76" class="API\CurrencyTest" classname="API.CurrencyTest" assertions="3" time="0.292870"/>
+    </testsuite>
+    <testsuite name="API\EmailVerificationTest" file="D:\xampp\htdocs\store\server\tests\EmailVerificationTest.php" tests="3" assertions="6" errors="1" failures="0" skipped="0" time="2.368817">
+      <testcase name="testSuccessfulEmailVerification" file="D:\xampp\htdocs\store\server\tests\EmailVerificationTest.php" line="54" class="API\EmailVerificationTest" classname="API.EmailVerificationTest" assertions="0" time="2.171445">
+        <error type="GuzzleHttp\Exception\ServerException">API\EmailVerificationTest::testSuccessfulEmailVerification&#13;
+GuzzleHttp\Exception\ServerException: Server error: `POST http://api.hwai.com/Email-Verification` resulted in a `500 Internal Server Error` response:
+{"Error":"Failed to send email: SMTP Error: Could not connect to SMTP host. Failed to connect to server","Status":false, (truncated...)
+
+&#13;
+D:\xampp\htdocs\store\server\vendor\guzzlehttp\guzzle\src\Exception\RequestException.php:111
+D:\xampp\htdocs\store\server\vendor\guzzlehttp\guzzle\src\Middleware.php:72
+D:\xampp\htdocs\store\server\vendor\guzzlehttp\promises\src\Promise.php:209
+D:\xampp\htdocs\store\server\vendor\guzzlehttp\promises\src\Promise.php:158
+D:\xampp\htdocs\store\server\vendor\guzzlehttp\promises\src\TaskQueue.php:52
+D:\xampp\htdocs\store\server\vendor\guzzlehttp\promises\src\Promise.php:251
+D:\xampp\htdocs\store\server\vendor\guzzlehttp\promises\src\Promise.php:227
+D:\xampp\htdocs\store\server\vendor\guzzlehttp\promises\src\Promise.php:272
+D:\xampp\htdocs\store\server\vendor\guzzlehttp\promises\src\Promise.php:229
+D:\xampp\htdocs\store\server\vendor\guzzlehttp\promises\src\Promise.php:69
+D:\xampp\htdocs\store\server\vendor\guzzlehttp\guzzle\src\Client.php:189
+D:\xampp\htdocs\store\server\vendor\guzzlehttp\guzzle\src\ClientTrait.php:95
+D:\xampp\htdocs\store\server\tests\EmailVerificationTest.php:75</error>
+      </testcase>
+      <testcase name="testMissingEmailField" file="D:\xampp\htdocs\store\server\tests\EmailVerificationTest.php" line="87" class="API\EmailVerificationTest" classname="API.EmailVerificationTest" assertions="3" time="0.091882"/>
+      <testcase name="testEmailNotRegistered" file="D:\xampp\htdocs\store\server\tests\EmailVerificationTest.php" line="105" class="API\EmailVerificationTest" classname="API.EmailVerificationTest" assertions="3" time="0.105490"/>
+    </testsuite>
+    <testsuite name="API\ForgotPasswordTest" file="D:\xampp\htdocs\store\server\tests\ForgotPasswordTest.php" tests="3" assertions="6" errors="1" failures="0" skipped="0" time="2.367258">
+      <testcase name="testSuccessfulForgotPassword" file="D:\xampp\htdocs\store\server\tests\ForgotPasswordTest.php" line="54" class="API\ForgotPasswordTest" classname="API.ForgotPasswordTest" assertions="0" time="2.163225">
+        <error type="GuzzleHttp\Exception\ServerException">API\ForgotPasswordTest::testSuccessfulForgotPassword&#13;
+GuzzleHttp\Exception\ServerException: Server error: `POST http://api.hwai.com/Forgot-password` resulted in a `500 Internal Server Error` response:
+{"Error":"Failed to send email: SMTP Error: Could not connect to SMTP host. Failed to connect to server","Status":false, (truncated...)
+
+&#13;
+D:\xampp\htdocs\store\server\vendor\guzzlehttp\guzzle\src\Exception\RequestException.php:111
+D:\xampp\htdocs\store\server\vendor\guzzlehttp\guzzle\src\Middleware.php:72
+D:\xampp\htdocs\store\server\vendor\guzzlehttp\promises\src\Promise.php:209
+D:\xampp\htdocs\store\server\vendor\guzzlehttp\promises\src\Promise.php:158
+D:\xampp\htdocs\store\server\vendor\guzzlehttp\promises\src\TaskQueue.php:52
+D:\xampp\htdocs\store\server\vendor\guzzlehttp\promises\src\Promise.php:251
+D:\xampp\htdocs\store\server\vendor\guzzlehttp\promises\src\Promise.php:227
+D:\xampp\htdocs\store\server\vendor\guzzlehttp\promises\src\Promise.php:272
+D:\xampp\htdocs\store\server\vendor\guzzlehttp\promises\src\Promise.php:229
+D:\xampp\htdocs\store\server\vendor\guzzlehttp\promises\src\Promise.php:69
+D:\xampp\htdocs\store\server\vendor\guzzlehttp\guzzle\src\Client.php:189
+D:\xampp\htdocs\store\server\vendor\guzzlehttp\guzzle\src\ClientTrait.php:95
+D:\xampp\htdocs\store\server\tests\ForgotPasswordTest.php:75</error>
+      </testcase>
+      <testcase name="testMissingEmailField" file="D:\xampp\htdocs\store\server\tests\ForgotPasswordTest.php" line="87" class="API\ForgotPasswordTest" classname="API.ForgotPasswordTest" assertions="3" time="0.079662"/>
+      <testcase name="testEmailNotRegistered" file="D:\xampp\htdocs\store\server\tests\ForgotPasswordTest.php" line="105" class="API\ForgotPasswordTest" classname="API.ForgotPasswordTest" assertions="3" time="0.124371"/>
+    </testsuite>
+    <testsuite name="API\LoginTest" file="D:\xampp\htdocs\store\server\tests\LoginTest.php" tests="4" assertions="9" errors="0" failures="0" skipped="0" time="0.401277">
+      <testcase name="testSuccessfulLogin" file="D:\xampp\htdocs\store\server\tests\LoginTest.php" line="53" class="API\LoginTest" classname="API.LoginTest" assertions="3" time="0.112723"/>
+      <testcase name="testLoginInactiveUser" file="D:\xampp\htdocs\store\server\tests\LoginTest.php" line="86" class="API\LoginTest" classname="API.LoginTest" assertions="2" time="0.096110"/>
+      <testcase name="testLoginInvalidCredentials" file="D:\xampp\htdocs\store\server\tests\LoginTest.php" line="118" class="API\LoginTest" classname="API.LoginTest" assertions="2" time="0.138104"/>
+      <testcase name="testLoginMissingFields" file="D:\xampp\htdocs\store\server\tests\LoginTest.php" line="132" class="API\LoginTest" classname="API.LoginTest" assertions="2" time="0.054340"/>
+    </testsuite>
+    <testsuite name="API\ProfileAddAddressTest" file="D:\xampp\htdocs\store\server\tests\ProfileAddAddressTest.php" tests="4" assertions="15" errors="0" failures="0" skipped="0" time="0.564591">
+      <testcase name="testSuccessfulAddressRetrieval" file="D:\xampp\htdocs\store\server\tests\ProfileAddAddressTest.php" line="61" class="API\ProfileAddAddressTest" classname="API.ProfileAddAddressTest" assertions="4" time="0.142879"/>
+      <testcase name="testNoAddressesFound" file="D:\xampp\htdocs\store\server\tests\ProfileAddAddressTest.php" line="113" class="API\ProfileAddAddressTest" classname="API.ProfileAddAddressTest" assertions="3" time="0.103893"/>
+      <testcase name="testInvalidUserId" file="D:\xampp\htdocs\store\server\tests\ProfileAddAddressTest.php" line="152" class="API\ProfileAddAddressTest" classname="API.ProfileAddAddressTest" assertions="3" time="0.181923"/>
+      <testcase name="testSuccessfulAddAddress" file="D:\xampp\htdocs\store\server\tests\ProfileAddAddressTest.php" line="174" class="API\ProfileAddAddressTest" classname="API.ProfileAddAddressTest" assertions="5" time="0.135896"/>
+    </testsuite>
+    <testsuite name="API\ProfileAddressTest" file="D:\xampp\htdocs\store\server\tests\ProfileAddressTest.php" tests="3" assertions="10" errors="0" failures="0" skipped="0" time="0.327363">
+      <testcase name="testSuccessfulAddressRetrieval" file="D:\xampp\htdocs\store\server\tests\ProfileAddressTest.php" line="61" class="API\ProfileAddressTest" classname="API.ProfileAddressTest" assertions="4" time="0.100143"/>
+      <testcase name="testNoAddressesFound" file="D:\xampp\htdocs\store\server\tests\ProfileAddressTest.php" line="113" class="API\ProfileAddressTest" classname="API.ProfileAddressTest" assertions="3" time="0.100095"/>
+      <testcase name="testInvalidUserId" file="D:\xampp\htdocs\store\server\tests\ProfileAddressTest.php" line="152" class="API\ProfileAddressTest" classname="API.ProfileAddressTest" assertions="3" time="0.127125"/>
+    </testsuite>
+    <testsuite name="API\ProfileTest" file="D:\xampp\htdocs\store\server\tests\ProfileTest.php" tests="2" assertions="14" errors="0" failures="0" skipped="0" time="0.225340">
+      <testcase name="testSuccessfulProfileRetrieval" file="D:\xampp\htdocs\store\server\tests\ProfileTest.php" line="64" class="API\ProfileTest" classname="API.ProfileTest" assertions="11" time="0.131729"/>
+      <testcase name="testUserNotFound" file="D:\xampp\htdocs\store\server\tests\ProfileTest.php" line="120" class="API\ProfileTest" classname="API.ProfileTest" assertions="3" time="0.093611"/>
+    </testsuite>
+    <testsuite name="API\ProfileUpdateAddressTest" file="D:\xampp\htdocs\store\server\tests\ProfileUpdateAddressTest.php" tests="2" assertions="10" errors="0" failures="0" skipped="0" time="0.203421">
+      <testcase name="testSuccessfulUpdateAddress" file="D:\xampp\htdocs\store\server\tests\ProfileUpdateAddressTest.php" line="58" class="API\ProfileUpdateAddressTest" classname="API.ProfileUpdateAddressTest" assertions="7" time="0.118334"/>
+      <testcase name="testUpdateAddressNotFound" file="D:\xampp\htdocs\store\server\tests\ProfileUpdateAddressTest.php" line="116" class="API\ProfileUpdateAddressTest" classname="API.ProfileUpdateAddressTest" assertions="3" time="0.085087"/>
+    </testsuite>
+    <testsuite name="API\ProfileUpdateTest" file="D:\xampp\htdocs\store\server\tests\ProfileUpdateTest.php" tests="3" assertions="10" errors="0" failures="0" skipped="0" time="0.291820">
+      <testcase name="testSuccessfulProfileUpdate" file="D:\xampp\htdocs\store\server\tests\ProfileUpdateTest.php" line="59" class="API\ProfileUpdateTest" classname="API.ProfileUpdateTest" assertions="4" time="0.088830"/>
+      <testcase name="testMissingPhoneField" file="D:\xampp\htdocs\store\server\tests\ProfileUpdateTest.php" line="101" class="API\ProfileUpdateTest" classname="API.ProfileUpdateTest" assertions="3" time="0.088477"/>
+      <testcase name="testUserNotFound" file="D:\xampp\htdocs\store\server\tests\ProfileUpdateTest.php" line="143" class="API\ProfileUpdateTest" classname="API.ProfileUpdateTest" assertions="3" time="0.114513"/>
+    </testsuite>
+    <testsuite name="API\RegisterTest" file="D:\xampp\htdocs\store\server\tests\RegisterTest.php" tests="3" assertions="9" errors="0" failures="0" skipped="0" time="1.181264">
+      <testcase name="testSuccessfulRegistration" file="D:\xampp\htdocs\store\server\tests\RegisterTest.php" line="60" class="API\RegisterTest" classname="API.RegisterTest" assertions="3" time="0.995178"/>
+      <testcase name="testMissingFields" file="D:\xampp\htdocs\store\server\tests\RegisterTest.php" line="84" class="API\RegisterTest" classname="API.RegisterTest" assertions="3" time="0.080675"/>
+      <testcase name="testEmailAlreadyRegistered" file="D:\xampp\htdocs\store\server\tests\RegisterTest.php" line="110" class="API\RegisterTest" classname="API.RegisterTest" assertions="3" time="0.105410"/>
+    </testsuite>
+    <testsuite name="API\UpdateProfilePasswordTest" file="D:\xampp\htdocs\store\server\tests\UpdateProfilePasswordTest.php" tests="5" assertions="3" errors="0" failures="0" skipped="0" time="0.540139">
+      <testcase name="testUpdatePasswordSuccessfully" file="D:\xampp\htdocs\store\server\tests\UpdateProfilePasswordTest.php" line="64" class="API\UpdateProfilePasswordTest" classname="API.UpdateProfilePasswordTest" assertions="3" time="0.128358"/>
+      <testcase name="testMissingData" file="D:\xampp\htdocs\store\server\tests\UpdateProfilePasswordTest.php" line="108" class="API\UpdateProfilePasswordTest" classname="API.UpdateProfilePasswordTest" assertions="0" time="0.101103"/>
+      <testcase name="testPasswordsDoNotMatch" file="D:\xampp\htdocs\store\server\tests\UpdateProfilePasswordTest.php" line="148" class="API\UpdateProfilePasswordTest" classname="API.UpdateProfilePasswordTest" assertions="0" time="0.138719"/>
+      <testcase name="testOldPasswordIncorrect" file="D:\xampp\htdocs\store\server\tests\UpdateProfilePasswordTest.php" line="190" class="API\UpdateProfilePasswordTest" classname="API.UpdateProfilePasswordTest" assertions="0" time="0.090333"/>
+      <testcase name="testUserNotFound" file="D:\xampp\htdocs\store\server\tests\UpdateProfilePasswordTest.php" line="232" class="API\UpdateProfilePasswordTest" classname="API.UpdateProfilePasswordTest" assertions="0" time="0.081625"/>
+    </testsuite>
+  </testsuite>
+</testsuites>

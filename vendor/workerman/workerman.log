@@ -1,0 +1,9 @@
+2024-07-29 19:34:22 pid:1 Error: Call to undefined method Workerman\Connection\TcpConnection::request() in D:\xampp\htdocs\store\server\web\web_socket_workerman.php:25
+Stack trace:
+#0 D:\xampp\htdocs\store\server\vendor\workerman\workerman\Worker.php(2583): API\{closure}(Object(Workerman\Connection\TcpConnection))
+#1 D:\xampp\htdocs\store\server\vendor\workerman\workerman\Events\Select.php(311): Workerman\Worker->acceptConnection(Resource id #75)
+#2 D:\xampp\htdocs\store\server\vendor\workerman\workerman\Worker.php(1488): Workerman\Events\Select->loop()
+#3 D:\xampp\htdocs\store\server\vendor\workerman\workerman\Worker.php(1405): Workerman\Worker::forkWorkersForWindows()
+#4 D:\xampp\htdocs\store\server\vendor\workerman\workerman\Worker.php(560): Workerman\Worker::forkWorkers()
+#5 D:\xampp\htdocs\store\server\web\web_socket_workerman.php(85): Workerman\Worker::runAll()
+#6 {main}
