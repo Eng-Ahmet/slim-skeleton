@@ -36,7 +36,8 @@
         "phpunit/phpunit": "^11.2"
     },
     "scripts": {
-        "start": "php -S localhost:8080 -t public"
+        "start": "php -S localhost:8080 -t public",
+        "test": "vendor/bin/phpunit"
     },
     "minimum-stability": "stable",
     "license": "MIT",

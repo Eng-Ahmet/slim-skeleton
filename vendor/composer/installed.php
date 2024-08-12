@@ -1,24 +1,15 @@
 <?php return array(
     'root' => array(
-        'name' => 'ahmet/slim-skeleton',
+        'name' => 'hwai/slim-skeleton',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'a803bfab8c5165b43a5dc7171d9d8dd59170f965',
+        'reference' => 'fa7ed17e59b36b6fcaa14369e12d22b0d60ba65c',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
         'dev' => true,
     ),
     'versions' => array(
-        'ahmet/slim-skeleton' => array(
-            'pretty_version' => 'dev-main',
-            'version' => 'dev-main',
-            'reference' => 'a803bfab8c5165b43a5dc7171d9d8dd59170f965',
-            'type' => 'project',
-            'install_path' => __DIR__ . '/../../',
-            'aliases' => array(),
-            'dev_requirement' => false,
-        ),
         'amphp/amp' => array(
             'pretty_version' => 'v3.0.2',
             'version' => '3.0.2.0',
@@ -286,6 +277,15 @@
             'reference' => '8f06e92b95405216b237521cc64c804dd44c4a81',
             'type' => 'library',
             'install_path' => __DIR__ . '/../http-interop/http-factory-guzzle',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'hwai/slim-skeleton' => array(
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
+            'reference' => 'fa7ed17e59b36b6fcaa14369e12d22b0d60ba65c',
+            'type' => 'project',
+            'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
             'dev_requirement' => false,
         ),
