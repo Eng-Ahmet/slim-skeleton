@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit6ade58916eb8f59d9ac8fcb54d95d05a
+class ComposerStaticInit65408191c39518e43d16c30e836c729f
 {
     public static $files = array (
         '88254829cb0eed057c30eaabb6d8edc4' => __DIR__ . '/..' . '/amphp/amp/src/functions.php',
@@ -963,6 +963,7 @@ class ComposerStaticInit6ade58916eb8f59d9ac8fcb54d95d05a
         'PHPUnit\\Framework\\MockObject\\MockObjectApi' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/MockObject/Runtime/Api/MockObjectApi.php',
         'PHPUnit\\Framework\\MockObject\\MockObjectInternal' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/MockObject/Runtime/Interface/MockObjectInternal.php',
         'PHPUnit\\Framework\\MockObject\\NeverReturningMethodException' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/MockObject/Exception/NeverReturningMethodException.php',
+        'PHPUnit\\Framework\\MockObject\\NoMoreReturnValuesConfiguredException' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/MockObject/Exception/NoMoreReturnValuesConfiguredException.php',
         'PHPUnit\\Framework\\MockObject\\ProxiedCloneMethod' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/MockObject/Runtime/Api/ProxiedCloneMethod.php',
         'PHPUnit\\Framework\\MockObject\\ReflectionException' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/MockObject/Exception/ReflectionException.php',
         'PHPUnit\\Framework\\MockObject\\ReturnValueGenerator' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/MockObject/Runtime/ReturnValueGenerator.php',
@@ -1743,9 +1744,9 @@ class ComposerStaticInit6ade58916eb8f59d9ac8fcb54d95d05a
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit6ade58916eb8f59d9ac8fcb54d95d05a::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit6ade58916eb8f59d9ac8fcb54d95d05a::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit6ade58916eb8f59d9ac8fcb54d95d05a::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit65408191c39518e43d16c30e836c729f::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit65408191c39518e43d16c30e836c729f::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit65408191c39518e43d16c30e836c729f::$classMap;
 
         }, null, ClassLoader::class);
     }
