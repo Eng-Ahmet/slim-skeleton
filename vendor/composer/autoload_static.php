@@ -110,6 +110,7 @@ class ComposerStaticInit6ade58916eb8f59d9ac8fcb54d95d05a
             'Psr\\Http\\Client\\' => 16,
             'Psr\\Container\\' => 14,
             'Psr\\Clock\\' => 10,
+            'Predis\\' => 7,
             'PhpParser\\' => 10,
             'Phinx\\' => 6,
             'PHPMailer\\PHPMailer\\' => 20,
@@ -349,6 +350,10 @@ class ComposerStaticInit6ade58916eb8f59d9ac8fcb54d95d05a
         'Psr\\Clock\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/clock/src',
+        ),
+        'Predis\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/predis/predis/src',
         ),
         'PhpParser\\' => 
         array (

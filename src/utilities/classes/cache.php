@@ -1,102 +1,129 @@
 <?php
 
-declare(strict_types=1);
-
 namespace API\src\utilities\classes;
 
-final class Cache
+use Exception;
+use InvalidArgumentException;
+
+class Cache
 {
-    // Array to store the cache in memory
-    private array $cache = [];
+    private $cacheDir;
+    private $cacheTime;
 
-    // Array to store expiration times for each value
-    private array $expirationTimes = [];
-
-    /**
-     * Store a value in the cache with a specific key and expiration time.
-     */
-    public function set(string $key, $value, int $expiration = 3600): void
+    public function __construct($cacheDir = __DIR__ . '/../../variables/cache/', $cacheTime = 10)
     {
-        $this->cache[$key] = $value;
-        $this->expirationTimes[$key] = time() + $expiration;
+        $this->setCacheDir($cacheDir);
+        $this->setCacheTime($cacheTime);
     }
 
-    /**
-     * Retrieve a value from the cache by its key. Returns null if the value does not exist or has expired.
-     */
-    public function get(string $key)
+    public function setCacheDir($cacheDir)
     {
-        if ($this->isExpired($key)) {
+        $this->cacheDir = rtrim($cacheDir, '/') . '/';
+        if (!is_dir($this->cacheDir)) {
+            if (!mkdir($this->cacheDir, 0755, true)) {
+                throw new Exception("Unable to create cache directory: " . $this->cacheDir);
+            }
+        }
+    }
+
+    public function getCacheDir()
+    {
+        return $this->cacheDir;
+    }
+
+    public function setCacheTime($cacheTime)
+    {
+        if (!is_int($cacheTime) || $cacheTime <= 0) {
+            throw new InvalidArgumentException("Cache time must be a positive integer.");
+        }
+        $this->cacheTime = $cacheTime;
+    }
+
+    public function getCacheTime()
+    {
+        return $this->cacheTime;
+    }
+
+    private function getCacheFilePath($key)
+    {
+        return $this->cacheDir . md5($key) . '.cache';
+    }
+
+    public function set($key, $data)
+    {
+        $filePath = $this->getCacheFilePath($key);
+        $cacheData = [
+            'data' => serialize($data),
+            'timestamp' => time()
+        ];
+        if (file_put_contents($filePath, serialize($cacheData)) === false) {
+            throw new Exception("Failed to write cache data.");
+        }
+    }
+
+    public function get($key)
+    {
+        $filePath = $this->getCacheFilePath($key);
+
+        if (!file_exists($filePath)) {
+            return false;
+        }
+
+        $cacheData = unserialize(file_get_contents($filePath));
+
+        if ($cacheData === false) {
+            unlink($filePath);
+            throw new Exception("Failed to unserialize cache data.");
+        }
+
+        if (time() - $cacheData['timestamp'] > $this->cacheTime) {
             $this->delete($key);
-            return null;
+            return false;
         }
-        return $this->cache[$key] ?? null;
+
+        return unserialize($cacheData['data']);
     }
 
-    /**
-     * Update a value in the cache. If the value does not exist, it will be stored as a new entry.
-     */
-    public function update(string $key, $value, int $expiration = 3600): void
+    public function delete($key)
     {
-        if (!$this->isExpired($key)) {
-            $this->cache[$key] = $value;
-            $this->expirationTimes[$key] = time() + $expiration;
-        } else {
-            $this->set($key, $value, $expiration);
-        }
-    }
+        $filePath = $this->getCacheFilePath($key);
 
-    /**
-     * Delete a value from the cache by its key.
-     */
-    public function delete(string $key): void
-    {
-        unset($this->cache[$key], $this->expirationTimes[$key]);
-    }
-
-    /**
-     * Clear all values stored in the cache.
-     */
-    public function clear(): void
-    {
-        $this->cache = [];
-        $this->expirationTimes = [];
-    }
-
-    /**
-     * Check if the cached value has expired.
-     */
-    private function isExpired(string $key): bool
-    {
-        return isset($this->expirationTimes[$key]) && $this->expirationTimes[$key] < time();
-    }
-
-    /**
-     * Check if a value exists in the cache and has not expired.
-     */
-    public function has(string $key): bool
-    {
-        return isset($this->cache[$key]) && !$this->isExpired($key);
-    }
-
-    /**
-     * Extend the expiration time for a specific value in the cache if it exists.
-     */
-    public function extend(string $key, int $extraTime): void
-    {
-        if ($this->has($key)) {
-            $this->expirationTimes[$key] += $extraTime;
+        if (file_exists($filePath)) {
+            if (!unlink($filePath)) {
+                throw new Exception("Failed to delete cache file: " . $filePath);
+            }
         }
     }
 
-    /**
-     * Get the remaining time to expiration for a specific value.
-     */
-    public function getTimeLeft(string $key): ?int
+    public function clear()
     {
-        if ($this->has($key)) {
-            return $this->expirationTimes[$key] - time();
+        $files = glob($this->cacheDir . '*.cache');
+        $errors = [];
+
+        foreach ($files as $file) {
+            if (!unlink($file)) {
+                $errors[] = $file;
+            }
         }
-        return null;
+
+        if (!empty($errors)) {
+            throw new Exception("Failed to delete cache files: " . implode(', ', $errors));
+        }
+    }
+
+    public function isCached($key)
+    {
+        $filePath = $this->getCacheFilePath($key);
+        return file_exists($filePath) && (time() - filemtime($filePath) <= $this->cacheTime);
+    }
+
+    public function cleanExpired()
+    {
+        $files = glob($this->cacheDir . '*.cache');
+        foreach ($files as $file) {
+            if (time() - filemtime($file) > $this->cacheTime) {
+                unlink($file);
+            }
+        }
     }
 }

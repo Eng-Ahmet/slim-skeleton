@@ -11,9 +11,11 @@ use API\src\services\Container;
 use API\src\services\UserService;
 use API\src\utilities\classes\Cache;
 use API\src\utilities\classes\Encrypt;
+use API\src\utilities\classes\Env_Reader;
 use API\src\utilities\classes\jwt_class;
 use API\src\utilities\classes\Logger;
 use API\src\utilities\classes\Mail_Sender;
+use API\src\utilities\classes\Redis;
 use Psr\Container\ContainerInterface;
 
 final class Dependency
@@ -52,8 +54,30 @@ final class Dependency
             $container->get('database_query')
         ));
 
+        // Register env reader
+        $container->set('env', fn () => new Env_Reader(APP_PATH . DIRECTORY_SEPARATOR . '.env'));
+        // Register Redis
+        $container->set('redis', function ($container) {
+            $env_reader = $container->get('env');
+            $host = $env_reader->getValue('REDIS_HOST');
+            $port = $env_reader->getValue('REDIS_PORT');
+            $password = $env_reader->getValue('REDIS_PASSWORD');
+            return new Redis([
+                'scheme' => 'tcp',
+                'host' => $host,
+                'port' => $port,
+                'password' =>  $password,
+            ]);
+        });
+
         // Register Cache
-        $container->set('cache', fn () => new Cache());
+        $container->set('cache', function () {
+            $cache = new Cache();
+            $cache->cleanExpired();
+            return $cache;
+        });
+
+
 
         // initialize database_orm
         $container->get('database_orm');

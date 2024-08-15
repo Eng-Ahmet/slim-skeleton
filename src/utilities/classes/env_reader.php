@@ -8,7 +8,7 @@ class Env_Reader
 {
     protected $data = [];
 
-    public function __construct($filePath)
+    public function __construct($filePath )
     {
         $this->loadEnv($filePath);
     }
@@ -34,7 +34,7 @@ class Env_Reader
 
     public function getValue($key)
     {
-        // إرجاع قيمة المفتاح المطلوب إذا وجد، وإلا إرجاع قيمة فارغة
+        // return empty string if key not found
         return isset($this->data[$key]) ? $this->data[$key] : '';
     }
 }
