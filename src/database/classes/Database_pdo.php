@@ -11,7 +11,7 @@ class Database_pdo
     public static function init()
     {
         // Load database settings
-        $settings = require_once APP_PATH . DS . "src" . DS . "database". DS . "config" . DS . "db_pdo_setting.php";
+        $settings = require_once APP_PATH . DS . "src" . DS . "database" . DS . "config" . DS . "db_pdo_setting.php";
 
         // Check if settings array is properly defined
         if (!isset($settings['settings']['db'])) {

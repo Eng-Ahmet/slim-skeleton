@@ -4,21 +4,32 @@ declare(strict_types=1);
 
 namespace API\src\utilities\classes;
 
-use Phinx\Console\PhinxApplication;
-use Symfony\Component\Console\Input\StringInput;
-use Symfony\Component\Console\Output\ConsoleOutput;
+use API\src\utilities\classes\CommandRunner;
 
 trait SeederTrait
 {
-    protected function runSeeder(string $seederName): void
+    protected function runSeeder(string $seederName): array
     {
-        $application = new PhinxApplication();
+        $originalDir = getcwd();
 
-        // Ensure Phinx is properly configured
-        $input = new StringInput("seed:run --seed={$seederName}");
-        $output = new ConsoleOutput();
+        // change working directory
+        chdir(__DIR__ . '/../../../');
 
-        // Execute Phinx command
-        $application->run($input, $output);
+        // build command
+        $command = "vendor\\bin\\phinx seed:run --seed={$seederName} --environment=development";
+
+        // run command
+        $commandRunner = new CommandRunner($command);
+        $result = $commandRunner->run();
+
+        // restore working directory
+        chdir($originalDir);
+
+        // collect results
+        return [
+            'stdout' => $result['stdout'],
+            'stderr' => $result['stderr'],
+            'return_value' => $result['return_value']
+        ];
     }
 }

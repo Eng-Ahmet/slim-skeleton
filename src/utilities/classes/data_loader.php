@@ -22,7 +22,7 @@ class Data_Loader
         }
 
         // Include the file and return its contents
-        return include $filePath;
+        return require_once $filePath;
     }
 
 }

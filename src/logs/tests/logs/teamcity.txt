@@ -1,0 +1,16 @@
+
+##teamcity[testCount count='1' flowId='16940']
+
+##teamcity[testSuiteStarted name='CLI Arguments' flowId='16940']
+
+##teamcity[testSuiteStarted name='API\tests\HomeControllerTest' locationHint='php_qn://D:\xampp\htdocs\slim-skeleton\tests\HomeControllerTest.php::\API\tests\HomeControllerTest' flowId='16940']
+
+##teamcity[testStarted name='testGetRequestReturnsData' locationHint='php_qn://D:\xampp\htdocs\slim-skeleton\tests\HomeControllerTest.php::\API\tests\HomeControllerTest::testGetRequestReturnsData' flowId='16940']
+
+##teamcity[testFailed name='testGetRequestReturnsData' message='Error: Call to a member function get() on null' details='D:\xampp\htdocs\slim-skeleton\src\controllers\homeController.php:31|nD:\xampp\htdocs\slim-skeleton\tests\HomeControllerTest.php:42|n' duration='25' flowId='16940']
+
+##teamcity[testFinished name='testGetRequestReturnsData' duration='30' flowId='16940']
+
+##teamcity[testSuiteFinished name='API\tests\HomeControllerTest' flowId='16940']
+
+##teamcity[testSuiteFinished name='CLI Arguments' flowId='16940']

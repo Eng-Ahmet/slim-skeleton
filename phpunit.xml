@@ -4,21 +4,33 @@
     bootstrap="vendor/autoload.php"
     cacheDirectory="vendor/cache"
     executionOrder="depends,defects"
-    shortenArraysForExportThreshold="10"
     requireCoverageMetadata="true"
     beStrictAboutCoverageMetadata="true"
     beStrictAboutOutputDuringTests="true"
     failOnRisky="true"
     failOnWarning="true">
+
     <testsuites>
         <testsuite name="default">
             <directory>tests</directory>
         </testsuite>
     </testsuites>
 
-    <source ignoreIndirectDeprecations="true" restrictNotices="true" restrictWarnings="true">
+    <source restrictNotices="true" restrictWarnings="true">
         <include>
             <directory>src</directory>
         </include>
     </source>
+    
+    <!-- Logging section -->
+    <logging>
+        <!-- Log test results in JUnit XML format -->
+        <junit outputFile="src/logs/tests/logs/phpunit.junit.xml"/>
+        <!-- TestDox HTML and Text Logging -->
+        <testdoxHtml outputFile="src/logs/tests/logs/testdox.html"/>
+        <testdoxText outputFile="src/logs/tests/logs/testdox.txt"/>
+        <!-- TeamCity format logging -->
+        <teamcity outputFile="src/logs/tests/logs/teamcity.txt"/>
+    </logging>
+
 </phpunit>

@@ -85,4 +85,22 @@ final class Dependency
         // Return Container
         return $container;
     }
+    public static function configurePHPSettings(): void
+    {
+        // Set error reporting to display all errors
+   
+
+        // Set maximum file upload size to 25MB
+        ini_set('upload_max_filesize', '25M');
+
+        // Set maximum POST size to 25MB
+        ini_set('post_max_size', '25M');
+
+        // Set maximum execution time to 300 seconds (5 minutes)
+        ini_set('max_execution_time', '300');
+
+        // Set memory limit to 128MB
+        ini_set('memory_limit', '128M');
+        
+    }
 }

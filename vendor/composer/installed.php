@@ -3,7 +3,7 @@
         'name' => 'hwai/slim-skeleton',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '9e022ff218cc13c8e974630babc5eeaeef852701',
+        'reference' => 'e243c53c9482646f783721f8d43fb94d37849cc1',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -283,7 +283,7 @@
         'hwai/slim-skeleton' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '9e022ff218cc13c8e974630babc5eeaeef852701',
+            'reference' => 'e243c53c9482646f783721f8d43fb94d37849cc1',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

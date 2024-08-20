@@ -1,6 +1,8 @@
 <?php
 
-namespace src\controllers;
+declare(strict_types=1);
+
+namespace API\src\controllers;
 
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;

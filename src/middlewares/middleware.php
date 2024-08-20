@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 
+
 namespace API\src\middlewares;
 
 use Slim\App;
@@ -10,10 +11,12 @@ use Slim\App;
 use API\src\middlewares\error\InternalServerErrorMiddleware;
 use API\src\middlewares\error\MethodNotAllowedMiddleware;
 use API\src\middlewares\error\NotFoundMiddleware;
+use API\src\middlewares\security\FileUploadMiddleware;
+use API\src\middlewares\security\SanitizeMiddleware;
 use API\src\middlewares\token\TokenMiddleware;
-use Psr\Http\Message\ServerRequestInterface as Request;
-use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
-use Psr\Http\Message\ResponseInterface as Response;
+use Tuupola\Middleware\CorsMiddleware;
+
+
 
 class Middleware
 {
@@ -21,6 +24,12 @@ class Middleware
     {
         // Token middleware
         $app->add(new TokenMiddleware(Excluded_Route, Get_Routes_With_Token));
+
+        // Initialize and register the FileUploadMiddleware with allowed file types, max file size (25MB), and max file count (4)
+        $app->add(new FileUploadMiddleware(['image/jpeg', 'image/jpg', 'image/png'], 25 * 1024 * 1024, 4)); // 25MB and 4 files
+
+        // Sanitize middleware
+        $app->add(new SanitizeMiddleware());
 
         // Not Found middleware
         $app->add(new NotFoundMiddleware());
@@ -37,20 +46,16 @@ class Middleware
     }
 
 
-    private static function corsMiddleware()
+    private static function corsMiddleware(): CorsMiddleware
     {
-        return function (Request $request, RequestHandler $handler) {
-            $response = $handler->handle($request);
+        // Create and configure the CorsMiddleware
+        $cors = new corsMiddleware([
+            'origin' => ['*'], // You can specify allowed origins here, e.g., ['https://example.com']
+            'methods' => ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+            'headers' => ['X-Requested-With', 'Content-Type', 'Accept', 'Origin', 'Authorization', 'enctype'],
+            'maxAge' => 86400, // Cache preflight responses for 24 hours (86400 seconds)
+        ]);
 
-            // Add CORS headers
-            if ($request->getMethod() === 'OPTIONS') {
-                $response = new Response();
-            }
-
-            return $response
-                ->withHeader('Access-Control-Allow-Origin', '*')
-                ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization, enctype')
-                ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-        };
+        return $cors;
     }
 }

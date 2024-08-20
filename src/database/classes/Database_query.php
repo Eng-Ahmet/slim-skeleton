@@ -17,10 +17,20 @@ class Database_query
 
     function __construct()
     {
-        $this->servername = "localhost";
-        $this->username = "root";
-        $this->password = "";
-        $this->db = "db_name";
+
+        // Load database settings
+        $settings =  require_once APP_PATH . DS . "src" . DS . "database" . DS . "config" . DS . "db_query_setting.php";
+
+        if (!isset($settings['settings']['db'])) {
+            throw new \Exception("Database settings array is missing or incomplete.");
+        }
+        $dbSettings = $settings['settings']['db'];
+
+        // Create connection
+        $this->servername = $dbSettings['host'];
+        $this->username = $dbSettings['username'];
+        $this->password = $dbSettings['password'];
+        $this->db = $dbSettings['database'];
     }
 
     function read_data($sql)

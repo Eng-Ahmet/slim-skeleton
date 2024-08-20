@@ -1,0 +1,15 @@
+.card-no-errors {
+    border-color: #28a745;
+}
+
+.card-errors {
+    border-color: #dc3545;
+}
+
+.card-header {
+    font-weight: bold;
+}
+
+.btn-custom {
+    margin-left: 15px;
+}

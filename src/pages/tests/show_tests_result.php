@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 // Define the path to the XML file
-$filePath = pages_path . DS . 'tests' . DS . 'results.xml'; // تأكد من تحديث المسار إلى موقع ملف XML الخاص بك
+$filePath = APP_PATH . DS . 'src' . DS .'logs'. DS . 'tests' . DS . 'logs' . DS . 'phpunit.junit.xml'; 
 
 // Check if the file exists
 if (file_exists($filePath)) {
@@ -23,20 +23,16 @@ if (file_exists($filePath)) {
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>Test Results</title>
-            <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+            <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
             <link rel="shortcut icon" href="/settings/icon" type="image/x-icon">
-            <style>
-                .card-no-errors { border-color: #28a745; }
-                .card-errors { border-color: #dc3545; }
-                .card-header { font-weight: bold; }
-                .btn-custom { margin-left: 15px; }
-            </style>
+            <link rel="stylesheet" href="/assets/css/phpunit.css">
+
         </head>
         <body>
             <div class="container mt-4">
                 <div class="d-flex justify-content-between align-items-center">
                     <h1>Test Results</h1>
-                    <a href="http://api.hwai.com/run-tests" class="btn btn-primary btn-custom">Run Tests</a>
+                    <a href="/run-tests" class="btn btn-primary btn-custom">Run Tests</a>
                 </div>
                 <div class="mt-4">';
 

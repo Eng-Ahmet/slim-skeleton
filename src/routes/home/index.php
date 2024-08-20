@@ -2,6 +2,6 @@
 
 // GET
 
-use src\controllers\homeController;
+use API\src\controllers\homeController;
 
 $app->get('/', homeController::class . ':index');
