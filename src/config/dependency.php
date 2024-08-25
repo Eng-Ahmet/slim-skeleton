@@ -17,90 +17,89 @@ use API\src\utilities\classes\Logger;
 use API\src\utilities\classes\Mail_Sender;
 use API\src\utilities\classes\Redis;
 use Psr\Container\ContainerInterface;
+use Slim\Views\Twig;
+use Twig\Loader\FilesystemLoader;
 
 final class Dependency
 {
-
-    public  static function createContainer(): ContainerInterface
+    public static function createContainer(): ContainerInterface
     {
-        // Create Classes
-        // Create Container
         $container = new Container();
 
-        // Initialize and register Database ORM
-        $container->set('database_orm', fn () => Database_orm::init());
+        self::registerServices($container);
+        self::initializeOrmDatabase($container);
 
-        // Initialize and register PDO
-        $container->set('database_pdo', fn () => Database_pdo::init());
+        return $container;
+    }
 
-        // Initialize and register db_query
-        $container->set('database_query', fn () => new Database_query());
-
-        // Register Logger
-        $container->set('logger', fn () => new Logger());
-
-        // Register Encrypt
-        $container->set('encrypt', fn () => new Encrypt());
-
-        // Register jwt_class
-        $container->set('jwt_class', fn () => new jwt_class());
-
-        // Register Mail_Sender
-        $container->set('mail_sender', fn () => new Mail_Sender());
-
-        // Register UserService
-        $container->set(UserService::class, fn (ContainerInterface $container) => new UserService(
+    private static function registerServices(Container $container): void
+    {
+        $container->set('database_orm', fn() => Database_orm::init());
+        $container->set('database_pdo', fn() => Database_pdo::init());
+        $container->set('database_query', fn() => new Database_query());
+        $container->set('logger', fn() => new Logger());
+        $container->set('encrypt', fn() => new Encrypt());
+        $container->set('jwt_class', fn() => new jwt_class());
+        $container->set('mail_sender', fn() => new Mail_Sender());
+        $container->set(UserService::class, fn(ContainerInterface $container) => new UserService(
             $container->get('database_pdo'),
             $container->get('database_query')
         ));
-
-        // Register env reader
-        $container->set('env', fn () => new Env_Reader(APP_PATH . DIRECTORY_SEPARATOR . '.env'));
-        // Register Redis
-        $container->set('redis', function ($container) {
-            $env_reader = $container->get('env');
-            $host = $env_reader->getValue('REDIS_HOST');
-            $port = $env_reader->getValue('REDIS_PORT');
-            $password = $env_reader->getValue('REDIS_PASSWORD');
-            return new Redis([
-                'scheme' => 'tcp',
-                'host' => $host,
-                'port' => $port,
-                'password' =>  $password,
-            ]);
-        });
-
-        // Register Cache
-        $container->set('cache', function () {
-            $cache = new Cache();
-            $cache->cleanExpired();
-            return $cache;
-        });
-
-
-
-        // initialize database_orm
-        $container->get('database_orm');
-
-        // Return Container
-        return $container;
+        $container->set('env', fn() => new Env_Reader(APP_PATH . DIRECTORY_SEPARATOR . '.env'));
+        $container->set('redis', fn(ContainerInterface $container) => self::createRedis($container));
+        $container->set('cache', fn() => self::createCache());
+        $container->set('view', fn() => self::createTwig());
     }
+
+    private static function initializeOrmDatabase(Container $container): void
+    {
+        $container->get('database_orm');
+    }
+
+    private static function createRedis(ContainerInterface $container): Redis
+    {
+        $env_reader = $container->get('env');
+        $host = $env_reader->getValue('REDIS_HOST');
+        $port = $env_reader->getValue('REDIS_PORT');
+        $password = $env_reader->getValue('REDIS_PASSWORD');
+        return new Redis([
+            'scheme' => 'tcp',
+            'host' => $host,
+            'port' => $port,
+            'password' => $password,
+        ]);
+    }
+
+    private static function createCache(): Cache
+    {
+        $cache = new Cache();
+        $cache->cleanExpired();
+        return $cache;
+    }
+
+    private static function createTwig(): Twig
+    {
+        $loader = new FilesystemLoader(APP_PATH . DS . 'src' . DS . 'pages');
+        return new Twig($loader, [
+            'cache' => APP_PATH . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'var' . DIRECTORY_SEPARATOR . 'twig',
+            'auto_reload' => true,        // update the template if the original source changed
+            'debug' => true,              // only for development
+            'strict_variables' => true,   // to ignore invalid variables
+            'charset' => 'utf-8',         // set the charset
+            'optimizations' => -1,        // to enable all optimizations
+            'autoescape' => 'html',       // set the autoescaping
+        ]);
+    }
+
     public static function configurePHPSettings(): void
     {
-        // Set error reporting to display all errors
-   
+        ini_set('display_errors', '1');
+        ini_set('display_startup_errors', '1');
+        error_reporting(E_ALL);
 
-        // Set maximum file upload size to 25MB
         ini_set('upload_max_filesize', '25M');
-
-        // Set maximum POST size to 25MB
         ini_set('post_max_size', '25M');
-
-        // Set maximum execution time to 300 seconds (5 minutes)
         ini_set('max_execution_time', '300');
-
-        // Set memory limit to 128MB
         ini_set('memory_limit', '128M');
-        
     }
 }

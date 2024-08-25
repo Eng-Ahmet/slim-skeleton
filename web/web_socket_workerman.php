@@ -16,7 +16,7 @@ use Workerman\Connection\TcpConnection;
 define('VALID_KEY', '800879'); // valid key
 
 // Create a Websocket server
-$ws_worker = new Worker("websocket://0.0.0.0:8080");
+$ws_worker = new Worker("websocket://localhost:8000/");
 
 // 4 processes
 $ws_worker->count = 4;

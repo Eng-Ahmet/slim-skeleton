@@ -16,13 +16,15 @@ final class homeController
     private $logger;
     private $redisService;
     private $cacheService;
+    private $twig;
 
     // Constructor to inject dependencies
-    public function __construct(ContainerInterface $container)
+    public function __construct(ContainerInterface $container,)
     {
         $this->logger = $container->get('logger');
         $this->redisService = $container->get('redis');
         $this->cacheService = $container->get('cache');
+        $this->twig = $container->get('view');
     }
 
     public function index(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
@@ -56,5 +58,10 @@ final class homeController
 
         // return successResponse($response, $data, 200);
         return successResponse($response, $data, 200);
+    }
+
+    public function error(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
+    {
+        return $this->twig->render($response, 'errors/403.html.twig');
     }
 }

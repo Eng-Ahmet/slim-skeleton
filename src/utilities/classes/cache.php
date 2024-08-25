@@ -10,7 +10,7 @@ class Cache
     private $cacheDir;
     private $cacheTime;
 
-    public function __construct($cacheDir = __DIR__ . '/../../variables/cache/', $cacheTime = 10)
+    public function __construct($cacheDir = __DIR__ . '/../../var/cache/', $cacheTime = 10)
     {
         $this->setCacheDir($cacheDir);
         $this->setCacheTime($cacheTime);

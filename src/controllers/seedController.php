@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace API\src\controllers;
 
 use API\src\utilities\classes\SeederTrait;
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -13,6 +14,12 @@ use function API\src\utilities\functions\successResponse;
 final class SeedController
 {
     use SeederTrait;
+    private $twig;
+
+    public function __construct(ContainerInterface $container)
+    {
+        $this->twig = $container->get('view');
+    }
 
     public function run_seeds(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
@@ -27,11 +34,11 @@ final class SeedController
             $results[$seederName] = $this->runSeeder($seederName);
         }
 
-        // إعداد البيانات للاستجابة
+        // set status and message
         $status = 200;
         $message = 'All seeders have been run successfully.';
 
-        // بناء الاستجابة على شكل JSON
+        // build response
         return successResponse($response, [
             'message' => $message,
             'results' => $results
@@ -39,8 +46,6 @@ final class SeedController
     }
     public function show_seeds_page(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
-        $seedsTestPage = file_get_contents(pages_path . DS . 'seeds' . DS . 'index.php');
-        $response->getBody()->write($seedsTestPage);
-        return $response->withStatus(200);
+        return $this->twig->render($response, 'seeds/index.html.twig');
     }
 }

@@ -33,10 +33,6 @@ class SanitizeMiddleware
 
         // Apply additional security headers
         $response = $handler->handle($request);
-        $response = $response->withHeader('Content-Security-Policy', "default-src 'self'");
-        $response = $response->withHeader('X-Content-Type-Options', 'nosniff');
-        $response = $response->withHeader('X-Frame-Options', 'DENY');
-        $response = $response->withHeader('X-XSS-Protection', '1; mode=block');
 
         return $response;
     }

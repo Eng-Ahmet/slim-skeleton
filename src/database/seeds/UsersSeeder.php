@@ -13,10 +13,10 @@ class UsersSeeder extends AbstractSeed
     public function run(): void
     {
         $data_Loader = new Data_Loader();
-        // تحميل بيانات المستخدمين
+        // load users data
         $dataFilePath = $data_Loader->getData('usersData.php');
 
-        // إنشاء جدول المستخدمين
+        // create users table
         $users = $this->table('users');
         $users->insert($dataFilePath)
             ->save();

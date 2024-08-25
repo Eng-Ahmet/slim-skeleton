@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites>
-  <testsuite name="CLI Arguments" tests="1" assertions="0" errors="1" failures="0" skipped="0" time="0.040978">
-    <testsuite name="API\tests\HomeControllerTest" file="D:\xampp\htdocs\slim-skeleton\tests\HomeControllerTest.php" tests="1" assertions="0" errors="1" failures="0" skipped="0" time="0.040978">
-      <testcase name="testGetRequestReturnsData" file="D:\xampp\htdocs\slim-skeleton\tests\HomeControllerTest.php" line="30" class="API\tests\HomeControllerTest" classname="API.tests.HomeControllerTest" assertions="0" time="0.040978">
+  <testsuite name="CLI Arguments" tests="1" assertions="0" errors="1" failures="0" skipped="0" time="0.021335">
+    <testsuite name="API\tests\HomeControllerTest" file="D:\xampp\htdocs\slim-skeleton\tests\HomeControllerTest.php" tests="1" assertions="0" errors="1" failures="0" skipped="0" time="0.021335">
+      <testcase name="testGetRequestReturnsData" file="D:\xampp\htdocs\slim-skeleton\tests\HomeControllerTest.php" line="30" class="API\tests\HomeControllerTest" classname="API.tests.HomeControllerTest" assertions="0" time="0.021335">
         <error type="Error">API\tests\HomeControllerTest::testGetRequestReturnsData&#13;
 Error: Call to a member function get() on null
 &#13;
-D:\xampp\htdocs\slim-skeleton\src\controllers\homeController.php:31
+D:\xampp\htdocs\slim-skeleton\src\controllers\homeController.php:33
 D:\xampp\htdocs\slim-skeleton\tests\HomeControllerTest.php:42</error>
       </testcase>
     </testsuite>

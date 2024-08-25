@@ -2,12 +2,9 @@
 
 declare(strict_types=1);
 
-
-
 namespace API\src\middlewares;
 
 use Slim\App;
-
 use API\src\middlewares\error\InternalServerErrorMiddleware;
 use API\src\middlewares\error\MethodNotAllowedMiddleware;
 use API\src\middlewares\error\NotFoundMiddleware;
@@ -15,8 +12,9 @@ use API\src\middlewares\security\FileUploadMiddleware;
 use API\src\middlewares\security\SanitizeMiddleware;
 use API\src\middlewares\token\TokenMiddleware;
 use Tuupola\Middleware\CorsMiddleware;
-
-
+use API\src\middlewares\security\SecurityHeadersMiddleware; // Import the new middleware
+use API\src\services\Container;
+use Slim\Views\TwigMiddleware;
 
 class Middleware
 {
@@ -40,16 +38,18 @@ class Middleware
         // Method Not Allowed middleware
         $app->add(new MethodNotAllowedMiddleware());
 
-
         // CORS middleware
         $app->add(self::corsMiddleware());
-    }
 
+        // Add security headers middleware
+        $app->add(new SecurityHeadersMiddleware()); // Use the new middleware class
+
+    }
 
     private static function corsMiddleware(): CorsMiddleware
     {
         // Create and configure the CorsMiddleware
-        $cors = new corsMiddleware([
+        $cors = new CorsMiddleware([
             'origin' => ['*'], // You can specify allowed origins here, e.g., ['https://example.com']
             'methods' => ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
             'headers' => ['X-Requested-With', 'Content-Type', 'Accept', 'Origin', 'Authorization', 'enctype'],
