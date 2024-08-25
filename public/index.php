@@ -4,10 +4,6 @@ declare(strict_types=1);
 
 namespace API;
 
-ini_set('display_errors', '1');
-ini_set('display_startup_errors', '1');
-error_reporting(E_ALL);
-
 // Include required files
 require_once __DIR__ . '/../config.php';
 require_once APP_PATH . DS . 'autoload.php';
@@ -35,7 +31,7 @@ Middleware::setup($app);
 
 // Load utility functions and variables
 Files_Loader::loadFiles($app, APP_PATH . DS . 'src' . DS . 'utilities' . DS . 'functions');
-Files_Loader::loadFiles($app, APP_PATH . DS . 'src' . DS . 'variables');
+//Files_Loader::loadFiles($app, APP_PATH . DS . 'src' . DS . 'var');
 
 // Load routes
 Files_Loader::loadFiles($app, APP_PATH . DS . 'src' . DS . 'routes' . DS . 'seeds');
