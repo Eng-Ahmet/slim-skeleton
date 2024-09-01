@@ -8,13 +8,13 @@ use Slim\App;
 use API\src\middlewares\error\InternalServerErrorMiddleware;
 use API\src\middlewares\error\MethodNotAllowedMiddleware;
 use API\src\middlewares\error\NotFoundMiddleware;
+use API\src\middlewares\error\RuntimeErrorMiddleware;
 use API\src\middlewares\security\FileUploadMiddleware;
 use API\src\middlewares\security\SanitizeMiddleware;
 use API\src\middlewares\token\TokenMiddleware;
 use Tuupola\Middleware\CorsMiddleware;
-use API\src\middlewares\security\SecurityHeadersMiddleware; // Import the new middleware
-use API\src\services\Container;
-use Slim\Views\TwigMiddleware;
+use API\src\middlewares\security\SecurityHeadersMiddleware; 
+
 
 class Middleware
 {
@@ -29,6 +29,8 @@ class Middleware
         // Sanitize middleware
         $app->add(new SanitizeMiddleware());
 
+        // Runtime error middleware
+        $app->add(new RuntimeErrorMiddleware());
         // Not Found middleware
         $app->add(new NotFoundMiddleware());
 

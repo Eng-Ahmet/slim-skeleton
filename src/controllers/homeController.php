@@ -60,8 +60,4 @@ final class homeController
         return successResponse($response, $data, 200);
     }
 
-    public function error(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
-    {
-        return $this->twig->render($response, 'errors/403.html.twig');
-    }
 }
