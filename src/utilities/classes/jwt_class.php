@@ -6,41 +6,35 @@ namespace API\src\utilities\classes;
 
 use API\src\models\User;
 use Defuse\Crypto\Crypto;
+use Defuse\Crypto\Key;
 use Defuse\Crypto\Exception\CryptoException;
 use Exception;
 
 class jwt_class
 {
-    private $secretKey;
-    private $key;
+    private $tokenKey;
     private $envReader;
 
     public function __construct($envFilePath = APP_PATH . DIRECTORY_SEPARATOR . '.env')
     {
         $this->envReader = new Env_Reader($envFilePath);
-        $this->key = $this->envReader->getValue('ENCRYPT_SECRET_KEY');
+        $keyHex = $this->envReader->getValue('TOKEN_SECRET_KEY');
 
-        // تأكد من أن المفتاح موجود وطوله صحيح
-        if (empty($this->key) || strlen($this->key) !== SODIUM_CRYPTO_SECRETBOX_KEYBYTES * 2) {
-            // إنشاء مفتاح جديد
-            $this->key = random_bytes(SODIUM_CRYPTO_SECRETBOX_KEYBYTES); // إنشاء مفتاح جديد
-
-            // تخزين المفتاح الجديد كقيمة hex
-            $this->envReader->setValue('ENCRYPT_SECRET_KEY', bin2hex($this->key));
-
-            // حفظ التحديثات إلى الملف
+        if (!$keyHex || strlen($keyHex) !== Key::KEY_BYTE_SIZE * 2) {
+            $tokenKey = Key::createNewRandomKey();
+            $keyHex = $tokenKey->saveToAsciiSafeString();
+            $this->envReader->setValue('TOKEN_SECRET_KEY', $keyHex);
             $this->envReader->saveEnv($envFilePath);
-        } else {
-            // تحويل المفتاح من hex إلى bytes
-            $this->key = hex2bin($this->key);
         }
-    }
 
+        $this->tokenKey = Key::loadFromAsciiSafeString($keyHex);
+    }
 
     public function encode_data_token($data, $time = 3600)
     {
         $issuedAt = time();
         $expirationTime = $issuedAt + $time;
+
         $payload = [
             'iat' => $issuedAt,
             'exp' => $expirationTime,
@@ -48,15 +42,12 @@ class jwt_class
         ];
 
         $jsonPayload = json_encode($payload);
-        // Check if the JSON encoding was successful
         if ($jsonPayload === false) {
             throw new Exception('Failed to encode JSON payload: ' . json_last_error_msg());
         }
 
-        // Encrypt the payload
         try {
-            $token = Crypto::encrypt($jsonPayload, $this->key);
-            return $token;
+            return Crypto::encrypt($jsonPayload, $this->tokenKey);
         } catch (CryptoException $e) {
             throw new Exception('Failed to encrypt token: ' . $e->getMessage());
         }
@@ -65,25 +56,25 @@ class jwt_class
     public function decode_data($token)
     {
         try {
-            // Decrypt the payload
-            $jsonPayload = Crypto::decrypt($token, $this->key);
+            if (!$token) {
+                throw new Exception('Invalid token.');
+            }
+            $jsonPayload = Crypto::decrypt($token, $this->tokenKey);
             $payload = json_decode($jsonPayload, true);
 
-            // Check if the JSON decoding was successful
             if ($payload === null || !isset($payload['exp']) || !isset($payload['data'])) {
                 throw new Exception('Failed to decode JSON payload.');
             }
 
-            // Check if the token has expired
+
             if ($payload['exp'] < time()) {
                 throw new Exception('Token has expired.');
             }
 
-            return $payload['data']; // Return the data payload directly
+            return $payload['data'];
         } catch (CryptoException $e) {
             throw new Exception('Failed to decrypt token: ' . $e->getMessage());
         } catch (Exception $e) {
-            // Log the error for debugging
             error_log('Error decoding token: ' . $e->getMessage());
             throw new Exception('An error occurred while decoding the token.');
         }
@@ -94,14 +85,12 @@ class jwt_class
         try {
             $decodedToken = $this->decode_data($token);
 
-            // Check if the token has expired
             if (!$decodedToken) {
                 throw new Exception('Invalid token.');
             }
 
             $userId = $decodedToken['user_id'] ?? null;
 
-            // Check if the user exists in the database
             if (!$this->is_user_valid($userId)) {
                 throw new Exception('Invalid user.');
             }
@@ -112,7 +101,7 @@ class jwt_class
             $payload = [
                 'iat' => $issuedAt,
                 'exp' => $expirationTime,
-                'data' => ['user_id' => $userId] // Change the data to include the user_id
+                'data' => ['user_id' => $userId]
             ];
 
             $jsonPayload = json_encode($payload);
@@ -120,7 +109,7 @@ class jwt_class
                 throw new Exception('Failed to encode JSON payload: ' . json_last_error_msg());
             }
 
-            return Crypto::encrypt($jsonPayload, $this->key);
+            return Crypto::encrypt($jsonPayload, $this->tokenKey);
         } catch (Exception $e) {
             error_log('Error refreshing token: ' . $e->getMessage());
             return false;
@@ -129,7 +118,6 @@ class jwt_class
 
     private function is_user_valid($userId)
     {
-        // Check if the user exists in the database
         return User::where('id', $userId)->exists();
     }
 }
