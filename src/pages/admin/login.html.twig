@@ -1,89 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
-
 	<head>
-		<meta charset="UTF-8"/>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-		<title>Login</title>
-		<link
-		rel="icon" type="image/png" href="image/icon.png"/>
-		<!-- Bootstrap CSS -->
-		<link
-		href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"/>
-		<!-- FontAwesome CSS -->
-		<link
-		rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" crossorigin="anonymous"/>
-		<!-- Toastr CSS -->
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"/>
-		<link rel="stylesheet" href="/assets/css/login.css"/>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>login</title>
 	</head>
-
 	<body>
+
 		<div class="container">
 			<div class="row justify-content-center">
 				<div class="col-md-6 col-lg-4">
-					<div class=" mt-5">
+					<div class="card">
+						<div class="card-header">
+							Login
+						</div>
 						<div
 							class="card-body">
 							<!-- Company Logo -->
 							<div style="display: flex; justify-content: center">
-								<img src="/assets/images/defaults/logo.png" alt="Company Logo" class="img-fluid mb-4" style="max-width: 200px; text-align: center"/>
+								<img src="/assets/images/defaults/logo.png" alt="Company Logo" class="img-fluid mb-4"/>
 							</div>
 
 							<h3 class="card-title text-center">Login</h3>
-							<form method="post" id="loginForm">
+							<form id="loginForm">
 								<div class="form-group">
-									<label for="email">Email address</label>
-									<input type="email" class="form-control" id="email" placeholder="Enter email"/>
+									<label for="email">Email</label>
+									<input type="email" class="form-control" id="email" name="email" required>
 								</div>
 								<div class="form-group">
 									<label for="password">Password</label>
-									<div class="input-group">
-										<input type="password" class="form-control" id="password" placeholder="Password"/>
-										<div class="input-group-append">
-											<span class="input-group-text">
-												<i class="fas fa-eye" id="togglePassword"></i>
-											</span>
-										</div>
-									</div>
+									<input type="password" class="form-control" id="password" name="password" required>
 								</div>
-								<button type="submit" class="btn btn-primary btn-block">
-									Login
-								</button>
+								<div class="form-group">
+									<button type="submit" class="btn btn-primary btn-block">Login</button>
+								</div>
 							</form>
 						</div>
-						<div class="card-footer text-center d-flex" style="justify-content: space-around">
-							<small>
-								<a href="#">Forgot Password?</a>
-							</small>
-							<small>
-								<a href="/register">Don't have an account?</a>
-							</small>
-						</div>
-					</div>
-					<!-- Footer with Privacy Policy -->
-					<div class="text-center mt-3">
-						<small>
-							<a href="#">Privacy Policy</a>
-						</small>
-						|
-						<small>All rights reserved &copy; 2024</small>
 					</div>
 				</div>
 			</div>
 		</div>
-
-		<!-- Bootstrap JS and dependencies -->
-	 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-		 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
-		 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-		 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
-		    integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
-		    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-		<!-- Toastr JS -->
-		 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-		<!-- Custom JS -->
-		 <script type="module" src="/assets/js/login.js"></script>
 	</body>
-
 </html>
