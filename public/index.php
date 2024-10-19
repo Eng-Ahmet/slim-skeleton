@@ -18,7 +18,7 @@ use Slim\Factory\AppFactory;
 Dependency::configurePHPSettings();
 
 // Enforce HTTPS
-Security::enforceHttps();
+//Security::enforceHttps();
 
 // Create and configure the container
 $container = Dependency::createContainer();
