@@ -28,6 +28,7 @@ class jwt_class
             $this->envReader->setValue('TOKEN_SECRET_KEY',  $keyHex);
             $this->envReader->saveEnv($envFilePath);
         }
+        
     }
 
     public function encode_data_token($data, $time = 3600)

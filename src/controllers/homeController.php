@@ -19,14 +19,14 @@ final class homeController
     private $encrypt;
 
     // Constructor to inject dependencies
-    public function __construct(ContainerInterface $container,$envFilePath = APP_PATH . DIRECTORY_SEPARATOR . '.env')
+    public function __construct(ContainerInterface $container, $envFilePath = APP_PATH . DIRECTORY_SEPARATOR . '.env')
     {
         $this->logger = $container->get('logger');
         $this->redisService = $container->get('redis');
         $this->cacheService = $container->get('cache');
         $this->twig = $container->get('view');
         $this->encrypt = $container->get('encrypt');
-
+        $this->encrypt = $container->get('jwt_class');
     }
 
     public function index(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface

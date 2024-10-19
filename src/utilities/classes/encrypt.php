@@ -24,6 +24,7 @@ class Encrypt
             $this->envReader->setValue('ENCRYPT_SECRET_KEY', $keyHex);
             $this->envReader->saveEnv($envFilePath);
         }
+        
     }
 
     public function encrypt(string $plaintext): string
