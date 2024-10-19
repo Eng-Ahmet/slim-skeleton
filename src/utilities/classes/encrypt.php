@@ -16,14 +16,14 @@ class Encrypt
         $this->envReader = new Env_Reader($envFilePath);
         $keyHex = $this->envReader->getValue('ENCRYPT_SECRET_KEY');
 
-        if (!$keyHex || strlen($keyHex) !== Key::KEY_BYTE_SIZE * 2) {
+        try {
+            $this->key = Key::loadFromAsciiSafeString($keyHex);
+        } catch (Exception $e) {
             $key = Key::createNewRandomKey();
             $keyHex = $key->saveToAsciiSafeString();
             $this->envReader->setValue('ENCRYPT_SECRET_KEY', $keyHex);
             $this->envReader->saveEnv($envFilePath);
         }
-
-        $this->key = Key::loadFromAsciiSafeString($keyHex);
     }
 
     public function encrypt(string $plaintext): string

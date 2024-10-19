@@ -18,16 +18,16 @@ class jwt_class
     public function __construct($envFilePath = APP_PATH . DIRECTORY_SEPARATOR . '.env')
     {
         $this->envReader = new Env_Reader($envFilePath);
-        $keyHex = $this->envReader->getValue('TOKEN_SECRET_KEY');
+        $keyHex = trim($this->envReader->getValue('TOKEN_SECRET_KEY'));
+        try {
+            $this->tokenKey = Key::loadFromAsciiSafeString($keyHex);
+        } catch (Exception $e) {
 
-        if (!$keyHex || strlen($keyHex) !== Key::KEY_BYTE_SIZE * 2) {
             $tokenKey = Key::createNewRandomKey();
             $keyHex = $tokenKey->saveToAsciiSafeString();
-            $this->envReader->setValue('TOKEN_SECRET_KEY', $keyHex);
+            $this->envReader->setValue('TOKEN_SECRET_KEY',  $keyHex);
             $this->envReader->saveEnv($envFilePath);
         }
-
-        $this->tokenKey = Key::loadFromAsciiSafeString($keyHex);
     }
 
     public function encode_data_token($data, $time = 3600)
