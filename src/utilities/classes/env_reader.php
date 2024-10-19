@@ -17,14 +17,11 @@ class Env_Reader
 
     protected function loadEnv($filePath)
     {
-        // التحقق من وجود الملف
         if (file_exists($filePath)) {
             $lines = file($filePath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
             foreach ($lines as $line) {
-                // التأكد من أن السطر ليس تعليقًا
                 if (strpos($line, '=') !== false) {
                     list($key, $value) = explode('=', $line, 2);
-                    // إزالة المسافات البيضاء من المفتاح والقيمة
                     $this->data[trim($key)] = trim($value);
                 }
             }
@@ -35,13 +32,11 @@ class Env_Reader
 
     public function getValue($key)
     {
-        // إرجاع قيمة فارغة إذا لم يتم العثور على المفتاح
         return isset($this->data[$key]) ? $this->data[$key] : '';
     }
 
     public function setValue($key, $value)
     {
-        // إزالة المسافات البيضاء من المفتاح والقيمة
         $this->data[trim($key)] = trim($value);
     }
 
@@ -52,7 +47,6 @@ class Env_Reader
         foreach ($this->data as $key => $value) {
             $lines[] = "$key=$value";
         }
-        // كتابة القيم المحدثة إلى الملف
         file_put_contents($envFilePath, implode(PHP_EOL, $lines));
     }
 }
