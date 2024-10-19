@@ -10,6 +10,7 @@ use API\src\database\classes\Database_query;
 use API\src\services\Container;
 use API\src\services\UserService;
 use API\src\utilities\classes\Cache;
+use API\src\utilities\classes\csv_to_database_loader;
 use API\src\utilities\classes\Encrypt;
 use API\src\utilities\classes\Env_Reader;
 use API\src\utilities\classes\jwt_class;
@@ -49,6 +50,8 @@ final class Dependency
         $container->set('redis', fn(ContainerInterface $container) => self::createRedis($container));
         $container->set('cache', fn() => self::createCache());
         $container->set('view', fn() => self::createTwig());
+
+        $container->set('csv_to_database_loader', fn() => new csv_to_database_loader());
     }
 
     private static function initializeOrmDatabase(Container $container): void

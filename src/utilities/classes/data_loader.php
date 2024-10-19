@@ -8,7 +8,7 @@ use Slim\App;
 
 class Data_Loader
 {
-    private static string $dataDirectory = APP_PATH . DS . 'src' . DS . 'var' . DS;
+    private static string $dataDirectory = APP_PATH . DS . 'src' . DS . 'var' . DS . 'php' . DS;
 
     /**
      * Get data from a specific file.
@@ -24,5 +24,4 @@ class Data_Loader
         // Include the file and return its contents
         return require_once $filePath;
     }
-
 }

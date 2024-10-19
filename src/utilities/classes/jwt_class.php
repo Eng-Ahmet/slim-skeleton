@@ -6,7 +6,6 @@ namespace API\src\utilities\classes;
 
 use API\src\models\User;
 use Defuse\Crypto\Crypto;
-use Defuse\Crypto\Key;
 use Defuse\Crypto\Exception\CryptoException;
 use Exception;
 
@@ -16,58 +15,66 @@ class jwt_class
     private $key;
     private $envReader;
 
-    public function __construct($envFilePath = APP_PATH . DS . '.env')
+    public function __construct($envFilePath = APP_PATH . DIRECTORY_SEPARATOR . '.env')
     {
         $this->envReader = new Env_Reader($envFilePath);
-        $this->secretKey = $this->envReader->getValue('TOKEN_SECRET_KEY');
+        $this->key = $this->envReader->getValue('ENCRYPT_SECRET_KEY');
 
-        if (empty($this->secretKey)) {
-            throw new Exception('Secret key not set in environment variables.');
+        // تأكد من أن المفتاح موجود وطوله صحيح
+        if (empty($this->key) || strlen($this->key) !== SODIUM_CRYPTO_SECRETBOX_KEYBYTES * 2) {
+            // إنشاء مفتاح جديد
+            $this->key = random_bytes(SODIUM_CRYPTO_SECRETBOX_KEYBYTES); // إنشاء مفتاح جديد
+
+            // تخزين المفتاح الجديد كقيمة hex
+            $this->envReader->setValue('ENCRYPT_SECRET_KEY', bin2hex($this->key));
+
+            // حفظ التحديثات إلى الملف
+            $this->envReader->saveEnv($envFilePath);
+        } else {
+            // تحويل المفتاح من hex إلى bytes
+            $this->key = hex2bin($this->key);
         }
-
-        // configure key
-        $this->key = Key::loadFromAsciiSafeString($this->secretKey);
     }
+
 
     public function encode_data_token($data, $time = 3600)
     {
         $issuedAt = time();
         $expirationTime = $issuedAt + $time;
-        $payload = array(
+        $payload = [
             'iat' => $issuedAt,
             'exp' => $expirationTime,
             'data' => $data
-        );
+        ];
 
         $jsonPayload = json_encode($payload);
-        // check if the json encoding was successful
+        // Check if the JSON encoding was successful
         if ($jsonPayload === false) {
-            throw new Exception('Failed to encode JSON payload.');
+            throw new Exception('Failed to encode JSON payload: ' . json_last_error_msg());
         }
 
-        // encrypt the payload
+        // Encrypt the payload
         try {
             $token = Crypto::encrypt($jsonPayload, $this->key);
+            return $token;
         } catch (CryptoException $e) {
             throw new Exception('Failed to encrypt token: ' . $e->getMessage());
         }
-
-        return $token;
     }
 
     public function decode_data($token)
     {
         try {
-            // encrypt the payload
+            // Decrypt the payload
             $jsonPayload = Crypto::decrypt($token, $this->key);
             $payload = json_decode($jsonPayload, true);
 
-            // check if the json decoding was successful
+            // Check if the JSON decoding was successful
             if ($payload === null || !isset($payload['exp']) || !isset($payload['data'])) {
                 throw new Exception('Failed to decode JSON payload.');
             }
 
-            // check if the token has expired
+            // Check if the token has expired
             if ($payload['exp'] < time()) {
                 throw new Exception('Token has expired.');
             }
@@ -76,58 +83,53 @@ class jwt_class
         } catch (CryptoException $e) {
             throw new Exception('Failed to decrypt token: ' . $e->getMessage());
         } catch (Exception $e) {
-            return false;
+            // Log the error for debugging
+            error_log('Error decoding token: ' . $e->getMessage());
+            throw new Exception('An error occurred while decoding the token.');
         }
     }
+
     public function refresh_token($token, $refreshTime = 3600)
     {
         try {
             $decodedToken = $this->decode_data($token);
 
-            // check if the token has expired  and the user_id is valid
-            if ($decodedToken && isset($decodedToken['user_id']) && !empty($decodedToken['user_id'])) {
-                $userId = $decodedToken['user_id'];
-
-                // Check if the user exists in the database
-                if (!$this->is_user_valid($userId)) {
-                    throw new Exception('Invalid user.');
-                    return false;
-                }
-
-                $issuedAt = time();
-                $expirationTime = $issuedAt + $refreshTime;
-
-                $payload = array(
-                    'iat' => $issuedAt,
-                    'exp' => $expirationTime,
-                    'data' => array('user_id' => $userId) // Change the data to include the user_id
-                );
-
-                $jsonPayload = json_encode($payload);
-                // Check if the json encoding was successful
-                if ($jsonPayload === false) {
-                    throw new Exception('Failed to encode JSON payload.');
-                }
-
-                // encrypt the payload
-                try {
-                    $newToken = Crypto::encrypt($jsonPayload, $this->key);
-                } catch (CryptoException $e) {
-                    throw new Exception('Failed to encrypt token: ' . $e->getMessage());
-                }
-
-                return $newToken;
-            } else {
+            // Check if the token has expired
+            if (!$decodedToken) {
                 throw new Exception('Invalid token.');
             }
+
+            $userId = $decodedToken['user_id'] ?? null;
+
+            // Check if the user exists in the database
+            if (!$this->is_user_valid($userId)) {
+                throw new Exception('Invalid user.');
+            }
+
+            $issuedAt = time();
+            $expirationTime = $issuedAt + $refreshTime;
+
+            $payload = [
+                'iat' => $issuedAt,
+                'exp' => $expirationTime,
+                'data' => ['user_id' => $userId] // Change the data to include the user_id
+            ];
+
+            $jsonPayload = json_encode($payload);
+            if ($jsonPayload === false) {
+                throw new Exception('Failed to encode JSON payload: ' . json_last_error_msg());
+            }
+
+            return Crypto::encrypt($jsonPayload, $this->key);
         } catch (Exception $e) {
+            error_log('Error refreshing token: ' . $e->getMessage());
             return false;
         }
     }
 
     private function is_user_valid($userId)
     {
-        // check if the user exists in the database
-        return User::where('id', $userId)->exists() ? true : false;
+        // Check if the user exists in the database
+        return User::where('id', $userId)->exists();
     }
 }

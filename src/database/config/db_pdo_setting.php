@@ -12,7 +12,7 @@ return [
         'db' => [
             'driver' => 'mysql',
             'host' => '127.0.0.1',
-            'database' => 'db_name',
+            'database' => 'hakathon',
             'username' => 'root',
             'password' => '',
             'charset'   => 'utf8mb4',

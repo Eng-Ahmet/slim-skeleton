@@ -38,6 +38,7 @@ Files_Loader::loadFiles($app, APP_PATH . DS . 'src' . DS . 'routes' . DS . 'seed
 Files_Loader::loadFiles($app, APP_PATH . DS . 'src' . DS . 'routes' . DS . 'phpunit');
 Files_Loader::loadFiles($app, APP_PATH . DS . 'src' . DS . 'routes' . DS . 'home');
 Files_Loader::loadFiles($app, APP_PATH . DS . 'src' . DS . 'routes' . DS . 'users');
+Files_Loader::loadFiles($app, APP_PATH . DS . 'src' . DS . 'routes' . DS . 'admin');
 
 // Run the application
 $app->run();

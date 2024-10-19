@@ -6,10 +6,9 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-use function API\src\utilities\functions\generateEncryptSecretKey;
-use function API\src\utilities\functions\generateIvKey;
-use function API\src\utilities\functions\generateTokenSecretKey;
+
 use function API\src\utilities\functions\successResponse;
+
 
 final class homeController
 {
@@ -17,14 +16,17 @@ final class homeController
     private $redisService;
     private $cacheService;
     private $twig;
+    private $encrypt;
 
     // Constructor to inject dependencies
-    public function __construct(ContainerInterface $container,)
+    public function __construct(ContainerInterface $container,$envFilePath = APP_PATH . DIRECTORY_SEPARATOR . '.env')
     {
         $this->logger = $container->get('logger');
         $this->redisService = $container->get('redis');
         $this->cacheService = $container->get('cache');
         $this->twig = $container->get('view');
+        $this->encrypt = $container->get('encrypt');
+
     }
 
     public function index(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
@@ -35,9 +37,7 @@ final class homeController
         if (!$data) {
             // If data does not exist, generate it
             $data = [
-                "Token_SecretKey" => generateTokenSecretKey(),
-                "Encrypt_SecretKey" => generateEncryptSecretKey(),
-                "eIvKe" => generateIvKey(),
+                'Message' => 'Hello World!',
             ];
 
             // Store data in Redis with an expiration time
@@ -60,4 +60,8 @@ final class homeController
         return successResponse($response, $data, 200);
     }
 
+    public function error(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
+    {
+        return $this->twig->render($response, 'errors/The_website_under_maintenance.html.twig');
+    }
 }

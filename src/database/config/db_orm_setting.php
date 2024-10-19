@@ -13,7 +13,7 @@ return [
         'db' => [
             'driver' => 'mysql',
             'host' => 'localhost',
-            'database' => 'db_name',
+            'database' => 'hakathon',
             'username' => 'root',
             'password' => '',
             'charset'   => 'utf8',

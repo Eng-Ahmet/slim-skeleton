@@ -33,30 +33,3 @@ function successResponse(ResponseInterface $response, $data, $statusCode = 200):
     $response->getBody()->write(json_encode($data));
     return $response->withStatus($statusCode)->withHeader('Content-Type', 'application/json');
 }
-
-/**************************************************************************************************************/
-
-// generate token
-function generateTokenSecretKey(int $length = 32): string
-{
-    $randomBytes = random_bytes($length);
-    return bin2hex($randomBytes);
-}
-
-/**************************************************************************************************************/
-
-// generate secret key
-function generateEncryptSecretKey(int $length = 16): string
-{
-    $randomBytes = random_bytes($length);
-    return bin2hex($randomBytes);
-}
-
-/**************************************************************************************************************/
-
-// generate iv
-function generateIvKey(int $length = 16): string
-{
-    $randomBytes = random_bytes($length);
-    return bin2hex($randomBytes);
-}

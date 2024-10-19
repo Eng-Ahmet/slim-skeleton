@@ -8,13 +8,13 @@ use Slim\App;
 use API\src\middlewares\error\InternalServerErrorMiddleware;
 use API\src\middlewares\error\MethodNotAllowedMiddleware;
 use API\src\middlewares\error\NotFoundMiddleware;
-use API\src\middlewares\error\RuntimeErrorMiddleware;
 use API\src\middlewares\security\FileUploadMiddleware;
 use API\src\middlewares\security\SanitizeMiddleware;
 use API\src\middlewares\token\TokenMiddleware;
 use Tuupola\Middleware\CorsMiddleware;
-use API\src\middlewares\security\SecurityHeadersMiddleware; 
-
+use API\src\middlewares\security\SecurityHeadersMiddleware; // Import the new middleware
+use API\src\services\Container;
+use Slim\Views\TwigMiddleware;
 
 class Middleware
 {
@@ -29,8 +29,6 @@ class Middleware
         // Sanitize middleware
         $app->add(new SanitizeMiddleware());
 
-        // Runtime error middleware
-        $app->add(new RuntimeErrorMiddleware());
         // Not Found middleware
         $app->add(new NotFoundMiddleware());
 
@@ -44,7 +42,7 @@ class Middleware
         $app->add(self::corsMiddleware());
 
         // Add security headers middleware
-        $app->add(new SecurityHeadersMiddleware()); // Use the new middleware class
+        // $app->add(new SecurityHeadersMiddleware()); // Use the new middleware class
 
     }
 
@@ -52,7 +50,7 @@ class Middleware
     {
         // Create and configure the CorsMiddleware
         $cors = new CorsMiddleware([
-            'origin' => ['*'], // You can specify allowed origins here, e.g., ['https://example.com']
+            'origin' => ['http://127.0.0.1:5500'], // You can specify allowed origins here, e.g., ['https://example.com']
             'methods' => ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
             'headers' => ['X-Requested-With', 'Content-Type', 'Accept', 'Origin', 'Authorization', 'enctype'],
             'maxAge' => 86400, // Cache preflight responses for 24 hours (86400 seconds)
