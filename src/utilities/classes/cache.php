@@ -66,7 +66,7 @@ class Cache
         $filePath = $this->getCacheFilePath($key);
 
         if (!file_exists($filePath)) {
-            return false;
+            return [];
         }
 
         $cacheData = unserialize(file_get_contents($filePath));
@@ -78,7 +78,7 @@ class Cache
 
         if (time() - $cacheData['timestamp'] > $this->cacheTime) {
             $this->delete($key);
-            return false;
+            return [];
         }
 
         return unserialize($cacheData['data']);

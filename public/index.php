@@ -1,18 +1,21 @@
 <?php
 
+
 declare(strict_types=1);
 
 namespace API;
 
-// Include required files
-require_once __DIR__ . '/../config.php';
-require_once APP_PATH . DS . 'autoload.php';
 
 use API\src\config\Dependency;
-use API\src\config\security\Security;
 use API\src\middlewares\Middleware;
-use API\src\utilities\classes\Files_Loader;
+use API\src\utilities\classes\Files_loader;
 use Slim\Factory\AppFactory;
+
+// Include required files
+require_once __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'config.php';
+require_once APP_PATH . DIRECTORY_SEPARATOR . 'autoload.php';
+
+
 
 // Configure PHP settings
 Dependency::configurePHPSettings();
@@ -30,15 +33,20 @@ $app = AppFactory::createFromContainer($container);
 Middleware::setup($app);
 
 // Load utility functions and variables
-Files_Loader::loadFiles($app, APP_PATH . DS . 'src' . DS . 'utilities' . DS . 'functions');
-//Files_Loader::loadFiles($app, APP_PATH . DS . 'src' . DS . 'var');
+Files_loader::loadFiles($app, APP_PATH . DS . 'src' . DS . 'utilities' . DS . 'functions');
+//Files_loader::loadFiles($app, APP_PATH . DS . 'src' . DS . 'var');
+
+
+
 
 // Load routes
-Files_Loader::loadFiles($app, APP_PATH . DS . 'src' . DS . 'routes' . DS . 'seeds');
-Files_Loader::loadFiles($app, APP_PATH . DS . 'src' . DS . 'routes' . DS . 'phpunit');
-Files_Loader::loadFiles($app, APP_PATH . DS . 'src' . DS . 'routes' . DS . 'home');
-Files_Loader::loadFiles($app, APP_PATH . DS . 'src' . DS . 'routes' . DS . 'users');
-Files_Loader::loadFiles($app, APP_PATH . DS . 'src' . DS . 'routes' . DS . 'admin');
+Files_loader::loadFiles($app, APP_PATH . DS . 'src' . DS . 'routes' . DS . 'seeds');
+Files_loader::loadFiles($app, APP_PATH . DS . 'src' . DS . 'routes' . DS . 'phpunit');
+Files_loader::loadFiles($app, APP_PATH . DS . 'src' . DS . 'routes' . DS . 'home');
+Files_loader::loadFiles($app, APP_PATH . DS . 'src' . DS . 'routes' . DS . 'users');
+Files_loader::loadFiles($app, APP_PATH . DS . 'src' . DS . 'routes' . DS . 'token');
+Files_loader::loadFiles($app, APP_PATH . DS . 'src' . DS . 'routes' . DS . 'admin');
+Files_loader::loadFiles($app, APP_PATH . DS . 'src' . DS . 'routes' . DS . 'client');
 
 // Run the application
 $app->run();

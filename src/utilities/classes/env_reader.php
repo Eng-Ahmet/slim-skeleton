@@ -6,7 +6,7 @@ declare(strict_types=1);
 
 namespace API\src\utilities\classes;
 
-class Env_Reader
+class Env_reader
 {
     protected $data = [];
 

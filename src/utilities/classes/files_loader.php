@@ -6,7 +6,7 @@ namespace API\src\utilities\classes;
 
 use Slim\App;
 
-class Files_Loader
+class Files_loader
 {
     public static function loadFiles(App $app, $directory)
     {

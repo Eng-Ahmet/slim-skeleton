@@ -17,7 +17,6 @@ class AuthenticatorMiddleware implements AuthenticatorInterface
             return true;
         } else {
 
-            require page_403_URL;
             return false;
         }
     }

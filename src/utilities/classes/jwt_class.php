@@ -17,7 +17,7 @@ class jwt_class
 
     public function __construct($envFilePath = APP_PATH . DIRECTORY_SEPARATOR . '.env')
     {
-        $this->envReader = new Env_Reader($envFilePath);
+        $this->envReader = new Env_reader($envFilePath);
         $keyHex = trim($this->envReader->getValue('TOKEN_SECRET_KEY'));
         try {
             $this->tokenKey = Key::loadFromAsciiSafeString($keyHex);
@@ -88,12 +88,15 @@ class jwt_class
 
             if (!$decodedToken) {
                 throw new Exception('Invalid token.');
+                return false;
+
             }
 
             $userId = $decodedToken['user_id'] ?? null;
 
             if (!$this->is_user_valid($userId)) {
                 throw new Exception('Invalid user.');
+                return false;
             }
 
             $issuedAt = time();
@@ -108,6 +111,8 @@ class jwt_class
             $jsonPayload = json_encode($payload);
             if ($jsonPayload === false) {
                 throw new Exception('Failed to encode JSON payload: ' . json_last_error_msg());
+                return false;
+
             }
 
             return Crypto::encrypt($jsonPayload, $this->tokenKey);

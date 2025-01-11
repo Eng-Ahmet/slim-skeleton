@@ -19,6 +19,7 @@ class SanitizeMiddleware
 
         if (is_array($params)) {
             array_walk_recursive($params, function (&$input) {
+                // تمرير المدخلات إلى sanitizeInput
                 $input = Security::sanitizeInput($input);
             });
             $request = $request->withParsedBody($params);
@@ -26,6 +27,7 @@ class SanitizeMiddleware
 
         if (is_array($queryParams)) {
             array_walk_recursive($queryParams, function (&$input) {
+                // تمرير المدخلات إلى sanitizeInput
                 $input = Security::sanitizeInput($input);
             });
             $request = $request->withQueryParams($queryParams);

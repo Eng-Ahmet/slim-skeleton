@@ -8,18 +8,31 @@ use Slim\App;
 use API\src\middlewares\error\InternalServerErrorMiddleware;
 use API\src\middlewares\error\MethodNotAllowedMiddleware;
 use API\src\middlewares\error\NotFoundMiddleware;
+use API\src\middlewares\security\CorsMiddleware;
 use API\src\middlewares\security\FileUploadMiddleware;
+use API\src\middlewares\security\ForbiddenMiddleware;
+use API\src\middlewares\security\RateLimitMiddleware;
 use API\src\middlewares\security\SanitizeMiddleware;
 use API\src\middlewares\token\TokenMiddleware;
-use Tuupola\Middleware\CorsMiddleware;
 use API\src\middlewares\security\SecurityHeadersMiddleware; // Import the new middleware
-use API\src\services\Container;
-use Slim\Views\TwigMiddleware;
 
 class Middleware
 {
+
     public static function setup(App $app)
     {
+
+        // CORS middleware - يجب أن يكون أولًا
+        $app->add(new CorsMiddleware());
+
+        // Add security headers middleware
+        $app->add(new SecurityHeadersMiddleware());
+
+
+        // Rate limit middleware
+        $app->add(new RateLimitMiddleware());
+
+
         // Token middleware
         $app->add(new TokenMiddleware(Excluded_Route, Get_Routes_With_Token));
 
@@ -38,24 +51,19 @@ class Middleware
         // Method Not Allowed middleware
         $app->add(new MethodNotAllowedMiddleware());
 
-        // CORS middleware
-        $app->add(self::corsMiddleware());
+        // Routing middleware (Slim 4)
+        //$app->addRoutingMiddleware();
 
-        // Add security headers middleware
-        // $app->add(new SecurityHeadersMiddleware()); // Use the new middleware class
 
-    }
-
-    private static function corsMiddleware(): CorsMiddleware
-    {
-        // Create and configure the CorsMiddleware
-        $cors = new CorsMiddleware([
-            'origin' => ['http://127.0.0.1:5500'], // You can specify allowed origins here, e.g., ['https://example.com']
-            'methods' => ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-            'headers' => ['X-Requested-With', 'Content-Type', 'Accept', 'Origin', 'Authorization', 'enctype'],
-            'maxAge' => 86400, // Cache preflight responses for 24 hours (86400 seconds)
-        ]);
-
-        return $cors;
+        // رد على طلبات OPTIONS لجميع المسارات
+        $app->options('/{routes:.+}', function ($request, $response) {
+            return $response
+                ->withHeader('Access-Control-Allow-Origin', '*') // السماح لجميع النطاقات أو يمكنك تحديدها
+                ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS') // تحديد الطرق المسموح بها
+                ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization, Access-Control-Allow-Origin') // تحديد الهيدرات المسموح بها
+                ->withStatus(200); // استجابة 200
+        });
+        
+        
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
 // vendor/bin/phinx migrate
-$settings = require 'src/database/config/db_orm_setting.php';
+$settings = require 'src' . DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'db_orm_setting.php';
 
 if (!isset($settings['settings']['db'])) {
     throw new Exception("Database settings array is missing or incomplete.");
@@ -12,8 +12,8 @@ $dbSettings = $settings['settings']['db'];
 return
     [
         'paths' => [
-            'migrations' => 'src/database/migrations/',
-            'seeds' => 'src/database/seeds/',
+            'migrations' => 'src' . DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . 'migrations' . DIRECTORY_SEPARATOR,
+            'seeds' => 'src' . DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . 'seeds' . DIRECTORY_SEPARATOR,
 
         ],
         'environments' => [
