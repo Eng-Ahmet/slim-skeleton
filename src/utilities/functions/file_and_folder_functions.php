@@ -6,30 +6,31 @@ namespace API\src\utilities\functions;
 
 use Psr\Http\Message\UploadedFileInterface;
 
+
 function moveUploadedFile(string $directory, UploadedFileInterface $uploadedFile, string $fileID = 'file'): ?string
 {
     // check if directory exists
     if (!file_exists($directory)) {
         if (!mkdir($directory, 0755, true) && !is_dir($directory)) {
             error_log("Failed to create directory: $directory");
-            return false;
+            return null;  // return null in case of failure
         }
     }
 
+    // Get the file extension
     $extension = pathinfo($uploadedFile->getClientFilename(), PATHINFO_EXTENSION);
-    $filename = sprintf('%s.%s', $fileID, $extension);
-    $destination = $directory . DIRECTORY_SEPARATOR . $filename;
+    $filename = sprintf('%s.%s', $fileID, $extension); // generate file name
+    $destination = $directory . DIRECTORY_SEPARATOR . $filename; // full destination path
 
-    // move uploaded file
     try {
+        // Move the uploaded file to the destination directory
         $uploadedFile->moveTo($destination);
-        return $filename;
+        return $filename;  // return the filename after moving
     } catch (\Exception $e) {
         error_log("Failed to move uploaded file: " . $e->getMessage());
-        return false;
+        return null;  // return null in case of failure
     }
 }
-
 
 
 /*
@@ -144,4 +145,12 @@ function initializeLogFile($FilePath): void
             throw new \RuntimeException("Unable to create log file: " . $FilePath);
         }
     }
+}
+
+
+function isImageFile($file) {
+    $allowedMimeTypes = ['image/png', 'image/jpeg', 'image/webp','image/jpg'];
+    $fileType = mime_content_type($file['tmp_name']);
+
+    return in_array($fileType, $allowedMimeTypes);
 }

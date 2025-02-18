@@ -8,13 +8,14 @@ use Slim\App;
 use API\src\middlewares\error\InternalServerErrorMiddleware;
 use API\src\middlewares\error\MethodNotAllowedMiddleware;
 use API\src\middlewares\error\NotFoundMiddleware;
+use API\src\middlewares\error\RuntimeErrorMiddleware;
 use API\src\middlewares\security\CorsMiddleware;
 use API\src\middlewares\security\FileUploadMiddleware;
-use API\src\middlewares\security\ForbiddenMiddleware;
 use API\src\middlewares\security\RateLimitMiddleware;
 use API\src\middlewares\security\SanitizeMiddleware;
 use API\src\middlewares\token\TokenMiddleware;
-use API\src\middlewares\security\SecurityHeadersMiddleware; // Import the new middleware
+use API\src\middlewares\security\SecurityHeadersMiddleware;
+
 
 class Middleware
 {
@@ -28,10 +29,8 @@ class Middleware
         // Add security headers middleware
         $app->add(new SecurityHeadersMiddleware());
 
-
         // Rate limit middleware
         $app->add(new RateLimitMiddleware());
-
 
         // Token middleware
         $app->add(new TokenMiddleware(Excluded_Route, Get_Routes_With_Token));
@@ -51,19 +50,23 @@ class Middleware
         // Method Not Allowed middleware
         $app->add(new MethodNotAllowedMiddleware());
 
+        // Error middleware
+        //$app->addErrorMiddleware(true, true, true);
+
+        //  runtime error middleware
+        $app->add(new RuntimeErrorMiddleware());
+
         // Routing middleware (Slim 4)
-        //$app->addRoutingMiddleware();
+        $app->addRoutingMiddleware();
 
 
         // رد على طلبات OPTIONS لجميع المسارات
         $app->options('/{routes:.+}', function ($request, $response) {
             return $response
-                ->withHeader('Access-Control-Allow-Origin', '*') // السماح لجميع النطاقات أو يمكنك تحديدها
+                ->withHeader('Access-Control-Allow-Origin', '*')
                 ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS') // تحديد الطرق المسموح بها
                 ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization, Access-Control-Allow-Origin') // تحديد الهيدرات المسموح بها
-                ->withStatus(200); // استجابة 200
+                ->withStatus(200);
         });
-        
-        
     }
 }

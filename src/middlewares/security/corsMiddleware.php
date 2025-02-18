@@ -17,7 +17,7 @@ class CorsMiddleware
 
         // Extract the Origin header from the request
         $origin = $request->getHeaderLine('Origin');
-        
+
         // Allow specific origin or all origins (if Origin is present)
         if ($origin) {
             $response = $response->withHeader('Access-Control-Allow-Origin', $origin);

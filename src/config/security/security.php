@@ -19,41 +19,37 @@ class Security
     // Sanitize Input
     public static function sanitizeInput($data)
     {
-        // إذا كان المدخل نصًا، نظفه
+        // if the input is an array, sanitize each element
         if (is_string($data)) {
-            return htmlspecialchars($data, ENT_QUOTES, 'UTF-8');
+            return htmlspecialchars(trim($data), ENT_QUOTES, 'UTF-8'); // Sanitize string
         }
 
-        // إذا كان المدخل عددًا صحيحًا، تحويله إلى نص
+        // if the input is an array, sanitize each element
         if (is_int($data)) {
             return (string)$data;
         }
 
-        // إذا كان المدخل عددًا عائمًا، تحويله إلى نص
+        // if the input is an array, sanitize each element
         if (is_float($data)) {
             return (string)$data;
         }
 
-        // إذا كان المدخل بوليانيًا، إرجاعه كـ نص
+        // if the input is an array, sanitize each element
         if (is_bool($data)) {
             return $data ? 'true' : 'false';
         }
 
-        // إذا كان المدخل JSON، محاولة فك تشفيره
+        // if the input is an array, sanitize each element
         if (is_string($data) && self::isJson($data)) {
             $decoded = json_decode($data, true);
-            return json_encode($decoded, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                return json_encode($decoded, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+            }
         }
 
-        // إذا كان المدخل ملفًا، يمكنك اتخاذ إجراء مناسب (مثل التحقق من نوع الملف)
-        if (is_array($data) && isset($data['tmp_name'])) {
-            // تنفيذ أي معالجة خاصة بالملفات حسب الحاجة، مثل التحقق من نوع الملف أو مسار التخزين
-            return $data; // أو أي معالجة أخرى ترغب في إجرائها
-        }
-
-        // إذا كان المدخل نوع آخر، إرجاع نص فارغ
         return '';
     }
+
 
     // Email Validation
     public static function validateEmail(string $email): bool
@@ -82,7 +78,7 @@ class Security
         return in_array($fileType, $allowedTypes);
     }
 
-    // دالة لمساعدتك في التحقق مما إذا كان النص هو JSON صالح
+    // JSON Validation
     private static function isJson($string): bool
     {
         json_decode($string);

@@ -11,7 +11,12 @@ class Database_pdo
     public static function init()
     {
         // Load database settings
-        $settings = require_once APP_PATH . DS . "src" . DS . "database" . DS . "config" . DS . "db_pdo_setting.php";
+        $settingsPath = APP_PATH . DS . "src" . DS . "database" . DS . "config" . DS . "db_pdo_setting.php";
+        if (!file_exists($settingsPath)) {
+            throw new \Exception("Database settings file not found at: " . $settingsPath);
+        }
+
+        $settings = require $settingsPath;
 
         // Check if settings array is properly defined
         if (!isset($settings['settings']['db'])) {

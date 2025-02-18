@@ -10,15 +10,16 @@ class Cache
     private $cacheDir;
     private $cacheTime;
 
-    public function __construct($cacheDir = __DIR__ . '/../../var/cache/', $cacheTime = 10)
+    public function __construct($cacheDir = APP_PATH . DS . "src" . DS . "var" . DS . "cache", $cacheTime = 10)
     {
         $this->setCacheDir($cacheDir);
         $this->setCacheTime($cacheTime);
+        $this->cleanExpired();
     }
 
     public function setCacheDir($cacheDir)
     {
-        $this->cacheDir = rtrim($cacheDir, '/') . '/';
+        $this->cacheDir = rtrim($cacheDir, DS) . DS;
         if (!is_dir($this->cacheDir)) {
             if (!mkdir($this->cacheDir, 0755, true)) {
                 throw new Exception("Unable to create cache directory: " . $this->cacheDir);
@@ -72,7 +73,7 @@ class Cache
         $cacheData = unserialize(file_get_contents($filePath));
 
         if ($cacheData === false) {
-            unlink($filePath);
+            $this->delete($key);
             throw new Exception("Failed to unserialize cache data.");
         }
 
@@ -101,7 +102,7 @@ class Cache
         $errors = [];
 
         foreach ($files as $file) {
-            if (!unlink($file)) {
+            if (file_exists($file) && !unlink($file)) {
                 $errors[] = $file;
             }
         }
@@ -121,7 +122,7 @@ class Cache
     {
         $files = glob($this->cacheDir . '*.cache');
         foreach ($files as $file) {
-            if (time() - filemtime($file) > $this->cacheTime) {
+            if (file_exists($file) && time() - filemtime($file) > $this->cacheTime) {
                 unlink($file);
             }
         }

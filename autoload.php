@@ -24,8 +24,6 @@ class Autoload
         // إذا كان الملف موجودًا، قم بتحميله
         if (file_exists($classFile)) {
             require $classFile;
-        } else {
-            throw new Exception("Class file not found: " . $classFile);
         }
     }
 }

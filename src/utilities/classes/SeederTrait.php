@@ -13,7 +13,7 @@ trait SeederTrait
         $originalDir = getcwd();
 
         // change working directory
-        chdir(__DIR__ . '/../../../');
+        chdir(APP_PATH);
 
         // build command
         $command = "vendor\\bin\\phinx seed:run --seed={$seederName} --environment=development";

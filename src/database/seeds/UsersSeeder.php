@@ -2,8 +2,7 @@
 
 declare(strict_types=1);
 
-require __DIR__ . '/../../../config.php'; 
-require __DIR__ . '/../../../autoload.php';
+require __DIR__ . DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'config.php';
 
 use API\src\utilities\classes\Data_Loader;
 use Phinx\Seed\AbstractSeed;

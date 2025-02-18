@@ -24,7 +24,8 @@ class RuntimeErrorMiddleware implements MiddlewareInterface
             // If an internal server error occurs, we return a 500 error message
 
             $response = new SlimResponse();
-            return errorResponse($response, $exception->getMessage(), 500);
+            $exceptionMessage = $exception->getMessage();
+            return errorResponse($response, $exceptionMessage, 500);
         }
     }
 }
