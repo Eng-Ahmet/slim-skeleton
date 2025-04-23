@@ -44,9 +44,7 @@ Files_loader::loadFiles($app, APP_PATH . DS . 'src' . DS . 'routes' . DS . 'seed
 Files_loader::loadFiles($app, APP_PATH . DS . 'src' . DS . 'routes' . DS . 'phpunit');
 Files_loader::loadFiles($app, APP_PATH . DS . 'src' . DS . 'routes' . DS . 'home');
 Files_loader::loadFiles($app, APP_PATH . DS . 'src' . DS . 'routes' . DS . 'users');
-Files_loader::loadFiles($app, APP_PATH . DS . 'src' . DS . 'routes' . DS . 'token');
 Files_loader::loadFiles($app, APP_PATH . DS . 'src' . DS . 'routes' . DS . 'admin');
-Files_loader::loadFiles($app, APP_PATH . DS . 'src' . DS . 'routes' . DS . 'client');
 
 // Run the application
 $app->run();
