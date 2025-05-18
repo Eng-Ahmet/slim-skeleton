@@ -2,6 +2,7 @@
 
 namespace API\src\utilities\functions;
 
+use API\src\config\HttpContext;
 use API\src\models\User;
 use Exception;
 use Psr\Http\Message\ResponseInterface;
@@ -15,32 +16,68 @@ function result_message($result)
 
 /**************************************************************************************************************/
 
-function errorResponse(ResponseInterface $response, $message, $statusCode): ResponseInterface
+
+function buildBaseResponse(ServerRequestInterface $request, int $statusCode, ?string $message = null, $data = null, ?string $error = null): array
 {
-    $result = [
-        'error' => $message,
-        'status' => false,
-        'code' => $statusCode
+    $serverParams = $request->getServerParams();
+
+    return [
+        'status'         => $statusCode,
+        'message'        => $message ?? ($statusCode >= 400 ? 'An error occurred' : 'Success'),
+        'data'           => $data,
+        'error'          => $error,
+        'timestamp'      => gmdate('c'), // ISO 8601 UTC
+        'version'        => '1.0.0',
+        'path'           => $request->getUri()->getPath(),
+        'user_agent'     => $request->getHeaderLine('User-Agent'),
+        'ip'             => $serverParams['REMOTE_ADDR'] ?? null,
+        'request_method' => $request->getMethod(),
+        'referer'        => $request->getHeaderLine('Referer'),
+        'content_type'   => $request->getHeaderLine('Content-Type'),
+        'accept_language' => $request->getHeaderLine('Accept-Language'),
+        'host'           => $request->getUri()->getHost(),
+        'protocol'       => $request->getUri()->getScheme(),
+        'original_url'   => (string) $request->getUri(),
+        'query_string'   => $request->getUri()->getQuery(),
+        'trace_id'       => bin2hex(random_bytes(8)), // أو من system logging
+        'signature'      => hash('sha256', (string) $request->getUri()) // تمثيل توقيع مبسط
     ];
-    $response->getBody()->write(result_message($result));
-    $response = $response->withStatus($statusCode);
-    $response = $response->withHeader('Content-Type', 'application/json');
-    return $response;
 }
+
+/**************************************************************************************************************/
+
+function errorResponse(string $message, int $statusCode): ResponseInterface
+{
+    $request = HttpContext::request();
+    $response = HttpContext::response();
+
+    $result = buildBaseResponse($request, $statusCode, $message, null, $message);
+
+    $response->getBody()->write(json_encode($result, JSON_UNESCAPED_UNICODE));
+    return $response
+        ->withStatus($statusCode)
+        ->withHeader('Content-Type', 'application/json');
+}
+
+
 
 
 /**************************************************************************************************************/
 
-function successResponse(ResponseInterface $response, $data, $statusCode = 200): ResponseInterface
+function successResponse($data, int $statusCode = 200): ResponseInterface
 {
-    $result = [
-        'data' => $data,
-        'status' => true,
-        'code' => $statusCode
-    ];
-    $response->getBody()->write(result_message($result));
-    return $response->withStatus($statusCode)->withHeader('Content-Type', 'application/json');
+    $request = HttpContext::request();
+    $response = HttpContext::response();
+
+    $result = buildBaseResponse($request, $statusCode, 'OK', $data, null);
+
+    $response->getBody()->write(json_encode($result, JSON_UNESCAPED_UNICODE));
+    return $response
+        ->withStatus($statusCode)
+        ->withHeader('Content-Type', 'application/json');
 }
+
+
 
 /**************************************************************************************************************/
 

@@ -9,13 +9,13 @@ use Exception;
 class Encrypt
 {
     private Key  $key;
-    private Env_reader $envReader;
+    private EnvReader $envReader;
     private string $keyFilePath;
     public function __construct($envFilePath = APP_PATH . DIRECTORY_SEPARATOR . '.env')
     {
         $this->keyFilePath = APP_PATH . DS . "src" . DS . "config" . DS . "security" . DS . date('Y-m-d') . '.key';
-        $this->envReader = new Env_reader($envFilePath);
-        
+        $this->envReader = new EnvReader($envFilePath);
+
         $keyHex = $this->envReader->getValue('ENCRYPT_SECRET_KEY');
 
         try {
@@ -50,5 +50,5 @@ class Encrypt
         } catch (Exception $e) {
             throw new Exception('Error comparing passwords: ' . $e->getMessage());
         }
-    }   
+    }
 }

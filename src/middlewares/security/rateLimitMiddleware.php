@@ -43,7 +43,7 @@ class RateLimitMiddleware
         // التحقق من تجاوز الحد الأقصى
         if (count($requests) > $this->maxRequests) {  // تعديل هنا
             $response = new Response();
-            return errorResponse($response, 'Rate limit exceeded. Please wait before sending more requests.', 429);
+            return errorResponse( 'Rate limit exceeded. Please wait before sending more requests.', 429);
         }
 
         // تسجيل الطلب الحالي

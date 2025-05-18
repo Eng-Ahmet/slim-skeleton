@@ -23,7 +23,7 @@ class InternalServerErrorMiddleware implements MiddlewareInterface
         } catch (HttpInternalServerErrorException $exception) {
             // If an internal server error occurs, we return a 500 error message
             $response = new SlimResponse(); // Use Slim's Response class
-            return errorResponse($response, 'Internal Server Error', 500);
+            return errorResponse('Internal Server Error', 500);
         }
     }
 }

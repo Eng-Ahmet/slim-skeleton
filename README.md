@@ -33,7 +33,7 @@ After installation, you will have a project with the following structure:
 To start the application and view it in your web browser, you can use the built-in PHP web server. Navigate to the root directory of your project and run:
 
 ```bash
-php -S localhost:8080 -t public
+rr.exe serve
 ```
 
 This will start a local server at [http://localhost:8080](http://localhost:8080). Open this URL in your browser to view your application.

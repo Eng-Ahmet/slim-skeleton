@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace API\src\utilities\classes;
 
-use API\src\utilities\classes\CommandRunner;
 
 trait SeederTrait
 {

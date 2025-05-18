@@ -2,62 +2,43 @@
 
 namespace API\src\controllers;
 
+use API\src\utilities\classes\Cache;
+use API\src\utilities\classes\Logger;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-
+use Slim\Views\Twig;
 
 use function API\src\utilities\functions\successResponse;
 
 
 final class homeController
 {
-    private $logger;
-    private $redisService;
-    private $cacheService;
-    private $twig;
-    private $encrypt;
+    private Logger $logger;
+    private Cache $cache;
+    private Twig $twig;
 
     // Constructor to inject dependencies
     public function __construct(ContainerInterface $container, $envFilePath = APP_PATH . DIRECTORY_SEPARATOR . '.env')
     {
-        $this->logger = $container->get('logger');
-        $this->redisService = $container->get('redis');
-        $this->cacheService = $container->get('cache');
-        $this->twig = $container->get('view');
-        $this->encrypt = $container->get('encrypt');
-        $this->encrypt = $container->get('jwt_class');
+        $this->logger = $container->get(Logger::class);
+        $this->cache = $container->get(Cache::class);
+        $this->twig = $container->get(Twig::class);
     }
 
     public function index(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
-        // Attempt to retrieve data from Redis
-        $data = $this->redisService->get('settings');
+        // Use logger
+        $this->logger->info('HomeController index method called');
+        // Use cache service
+        $this->cache->set('key', 'value');
+        $data = [
+            'message' => 'Welcome to the API',
+            'status' => 'success'
+        ];
 
-        if (!$data) {
-            // If data does not exist, generate it
-            $data = [
-                'Message' => 'Hello World!',
-            ];
-
-            // Store data in Redis with an expiration time
-            $this->redisService->set('settings', json_encode($data), 60); // 1 hour expiration
-
-            // Store data in Cache with an expiration time
-            $this->cacheService->set('setts', $data, 10);
-
-            // Use logger
-            $this->logger->info('Generated new settings and stored in Redis.');
-        } else {
-            // If data exists in Redis, decode it from JSON to an array
-            $data = json_decode($data, true);
-
-            // Use logger
-            $this->logger->info('Retrieved settings from Redis.');
-        }
-
-        // return successResponse($response, $data, 200);
-        return successResponse($response, $data, 200);
+        // return successResponse( $data, 200);
+        return successResponse($data, 200);
     }
 
     public function error(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface

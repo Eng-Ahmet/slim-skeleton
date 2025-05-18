@@ -4,6 +4,7 @@ namespace API\src\utilities\classes;
 
 use Predis\Client as RedisClient;
 use Predis\Connection\ConnectionException;
+use RuntimeException;
 
 class Redis
 {
@@ -19,7 +20,7 @@ class Redis
             $this->client = new RedisClient($parameters);
         } catch (ConnectionException $e) {
             // You can log the error or handle it as you see fit
-            throw new \RuntimeException("Unable to connect to Redis server: " . $e->getMessage());
+            throw new RuntimeException("Unable to connect to Redis server: " . $e->getMessage());
         }
     }
 

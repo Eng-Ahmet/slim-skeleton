@@ -22,7 +22,7 @@ class NotFoundMiddleware implements MiddlewareInterface
         } catch (HttpNotFoundException $exception) {
 
             $response = new SlimResponse();
-            return errorResponse($response, 'Page Not Found', $exception->getCode());
+            return errorResponse('Page Not Found', $exception->getCode());
         }
     }
 }

@@ -25,7 +25,7 @@ class MethodNotAllowedMiddleware implements MiddlewareInterface
 
             $allowedMethods = implode(', ', $exception->getAllowedMethods());
             $response = new SlimResponse(); // Use Slim's Response class
-            return  errorResponse($response, "Method Not Allowed. Allowed methods: $allowedMethods", 405);
+            return  errorResponse( "Method Not Allowed. Allowed methods: $allowedMethods", 405);
         }
     }
 }

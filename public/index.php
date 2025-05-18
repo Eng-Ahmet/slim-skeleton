@@ -8,7 +8,7 @@ namespace API;
 
 use API\src\config\Dependency;
 use API\src\middlewares\Middleware;
-use API\src\utilities\classes\Files_loader;
+use API\src\utilities\classes\FilesLoader;
 use Slim\Factory\AppFactory;
 
 // Include required files
@@ -33,18 +33,19 @@ $app = AppFactory::createFromContainer($container);
 Middleware::setup($app);
 
 // Load utility functions and variables
-Files_loader::loadFiles($app, APP_PATH . DS . 'src' . DS . 'utilities' . DS . 'functions');
+FilesLoader::loadFiles($app, APP_PATH . DS . 'src' . DS . 'utilities' . DS . 'functions');
 //Files_loader::loadFiles($app, APP_PATH . DS . 'src' . DS . 'var');
 
 
 
 
 // Load routes
-Files_loader::loadFiles($app, APP_PATH . DS . 'src' . DS . 'routes' . DS . 'seeds');
-Files_loader::loadFiles($app, APP_PATH . DS . 'src' . DS . 'routes' . DS . 'phpunit');
-Files_loader::loadFiles($app, APP_PATH . DS . 'src' . DS . 'routes' . DS . 'home');
-Files_loader::loadFiles($app, APP_PATH . DS . 'src' . DS . 'routes' . DS . 'users');
-Files_loader::loadFiles($app, APP_PATH . DS . 'src' . DS . 'routes' . DS . 'admin');
+FilesLoader::loadFiles($app, APP_PATH . DS . 'src' . DS . 'routes' . DS . 'seeds');
+FilesLoader::loadFiles($app, APP_PATH . DS . 'src' . DS . 'routes' . DS . 'phpunit');
+FilesLoader::loadFiles($app, APP_PATH . DS . 'src' . DS . 'routes' . DS . 'home');
+FilesLoader::loadFiles($app, APP_PATH . DS . 'src' . DS . 'routes' . DS . 'users');
+FilesLoader::loadFiles($app, APP_PATH . DS . 'src' . DS . 'routes' . DS . 'admin');
 
 // Run the application
-$app->run();
+//$app->run();
+return $app;

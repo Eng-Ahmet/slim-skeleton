@@ -17,7 +17,7 @@ class PhpunitController
 
     public function __construct(ContainerInterface $container)
     {
-        $this->twig = $container->get('view');
+        $this->twig = $container->get(Twig::class);
     }
 
     public function run_tests(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface

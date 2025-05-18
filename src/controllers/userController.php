@@ -28,9 +28,9 @@ final class UserController
     {
         try {
             $data = $this->userService->getAllUsers();
-            return successResponse($response, $data, 200);
+            return successResponse($data, 200);
         } catch (Exception $e) {
-            return errorResponse($response, $e->getMessage(), 500);
+            return errorResponse($e->getMessage(), 500);
         }
     }
 
@@ -40,9 +40,9 @@ final class UserController
         try {
             $id = $args['id'];
             $user = $this->userService->getUserById($id);
-            return successResponse($response, $user, 200);
+            return successResponse($user, 200);
         } catch (Exception $e) {
-            return errorResponse($response, $e->getMessage(), 500);
+            return errorResponse($e->getMessage(), 500);
         }
     }
 
@@ -52,9 +52,9 @@ final class UserController
         try {
             $page = isset($args['pageNumber']) ? (int)$args['pageNumber'] : 1;
             $users = $this->userService->getUsersByPage($page);
-            return successResponse($response, $users, 200);
+            return successResponse($users, 200);
         } catch (Exception $e) {
-            return errorResponse($response, $e->getMessage(), 500);
+            return errorResponse($e->getMessage(), 500);
         }
     }
 }

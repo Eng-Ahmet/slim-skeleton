@@ -8,17 +8,18 @@ use API\src\utilities\classes\SeederTrait;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Slim\Views\Twig;
 
 use function API\src\utilities\functions\successResponse;
 
 final class SeedController
 {
     use SeederTrait;
-    private $twig;
+    private Twig $twig;
 
     public function __construct(ContainerInterface $container)
     {
-        $this->twig = $container->get('view');
+        $this->twig = $container->get(Twig::class);
     }
 
     public function run_seeds(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
@@ -39,7 +40,7 @@ final class SeedController
         $message = 'All seeders have been run successfully.';
 
         // build response
-        return successResponse($response, [
+        return successResponse([
             'message' => $message,
             'results' => $results
         ], $status);

@@ -25,7 +25,7 @@ class RuntimeErrorMiddleware implements MiddlewareInterface
 
             $response = new SlimResponse();
             $exceptionMessage = $exception->getMessage();
-            return errorResponse($response, $exceptionMessage, 500);
+            return errorResponse($exceptionMessage, 500);
         }
     }
 }

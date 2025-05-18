@@ -147,10 +147,20 @@ function initializeLogFile($FilePath): void
     }
 }
 
+function isImageFile(UploadedFileInterface $uploadedFile): bool
+{
+    $allowedMimeTypes = ['image/png', 'image/jpeg', 'image/webp', 'image/jpg'];
 
-function isImageFile($file) {
-    $allowedMimeTypes = ['image/png', 'image/jpeg', 'image/webp','image/jpg'];
-    $fileType = mime_content_type($file['tmp_name']);
+    // الحصول على المسار المؤقت
+    $tmpFilePath = $uploadedFile->getStream()->getMetadata('uri');
 
-    return in_array($fileType, $allowedMimeTypes);
+    // التأكد أن الملف تم رفعه وأن له مسار مؤقت
+    if (!$tmpFilePath || !file_exists($tmpFilePath)) {
+        return false;
+    }
+
+    // الحصول على نوع الملف الحقيقي من النظام
+    $mimeType = mime_content_type($tmpFilePath);
+
+    return in_array($mimeType, $allowedMimeTypes, true);
 }

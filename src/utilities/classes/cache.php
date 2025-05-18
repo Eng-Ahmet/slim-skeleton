@@ -85,16 +85,6 @@ class Cache
         return unserialize($cacheData['data']);
     }
 
-    public function delete($key)
-    {
-        $filePath = $this->getCacheFilePath($key);
-
-        if (file_exists($filePath)) {
-            if (!unlink($filePath)) {
-                throw new Exception("Failed to delete cache file: " . $filePath);
-            }
-        }
-    }
 
     public function clear()
     {
@@ -118,12 +108,29 @@ class Cache
         return file_exists($filePath) && (time() - filemtime($filePath) <= $this->cacheTime);
     }
 
+
+
     public function cleanExpired()
     {
         $files = glob($this->cacheDir . '*.cache');
         foreach ($files as $file) {
             if (file_exists($file) && time() - filemtime($file) > $this->cacheTime) {
-                unlink($file);
+                // محاولة الحذف، وإذا فشل فقط تسجل دون رمي استثناء
+                if (!@unlink($file)) {
+                    error_log("Warning: Failed to delete expired cache file: " . $file);
+                }
+            }
+        }
+    }
+
+    public function delete($key)
+    {
+        $filePath = $this->getCacheFilePath($key);
+
+        if (file_exists($filePath)) {
+            if (!@unlink($filePath)) {
+                // بدل رمي استثناء، فقط تسجيل تحذير
+                error_log("Warning: Failed to delete cache file: " . $filePath);
             }
         }
     }

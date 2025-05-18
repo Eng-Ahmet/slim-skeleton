@@ -2,18 +2,22 @@
 
 namespace API\src\services;
 
+use API\src\database\classes\Database_pdo;
+use API\src\database\classes\Database_query;
 use API\src\models\User;
+use DateTime;
 use Exception;
+use Psr\Container\ContainerInterface;
 
 final class UserService
 {
-    private $database_query;
-    private $database_pdo;
+    private Database_query $database_query;
+    private  $database_pdo;
 
-    public function __construct($database_pdo, $database_query)
+    public function __construct(ContainerInterface $container)
     {
-        $this->database_pdo = $database_pdo;
-        $this->database_query = $database_query;
+        $this->database_pdo = $container->get(Database_pdo::class);
+        $this->database_query = $container->get(Database_query::class);
     }
 
     public function getAllUsers(): array
@@ -25,8 +29,8 @@ final class UserService
             if ($users->num_rows > 0) {
                 while ($row = $users->fetch_assoc()) {
                     $row['preferences'] = json_decode($row['preferences'], true);
-                    $row['created_at'] = (new \DateTime($row['created_at']))->format('Y-m-d\TH:i:s.u\Z');
-                    $row['updated_at'] = $row['updated_at'] ? (new \DateTime($row['updated_at']))->format('Y-m-d\TH:i:s.u\Z') : null;
+                    $row['created_at'] = (new DateTime($row['created_at']))->format('Y-m-d\TH:i:s.u\Z');
+                    $row['updated_at'] = $row['updated_at'] ? (new DateTime($row['updated_at']))->format('Y-m-d\TH:i:s.u\Z') : null;
                     $data[] = $row;
                 }
             }

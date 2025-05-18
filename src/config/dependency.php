@@ -10,12 +10,12 @@ use API\src\database\classes\Database_query;
 use API\src\services\Container;
 use API\src\services\UserService;
 use API\src\utilities\classes\Cache;
-use API\src\utilities\classes\csv_to_database_loader;
+use API\src\utilities\classes\CsvToDatabaseLoader;
 use API\src\utilities\classes\Encrypt;
-use API\src\utilities\classes\Env_Reader;
-use API\src\utilities\classes\jwt_class;
+use API\src\utilities\classes\EnvReader;
+use API\src\utilities\classes\JwtClass;
 use API\src\utilities\classes\Logger;
-use API\src\utilities\classes\Mail_Sender;
+use API\src\utilities\classes\MailSender;
 use API\src\utilities\classes\Redis;
 use Psr\Container\ContainerInterface;
 use Slim\Views\Twig;
@@ -35,33 +35,31 @@ final class Dependency
 
     private static function registerServices(Container $container): void
     {
-        $container->set('database_orm', fn() => Database_orm::init());
-        $container->set('database_pdo', fn() => Database_pdo::init());
-        $container->set('database_query', fn() => new Database_query());
-        $container->set('logger', fn() => new Logger());
-        $container->set('encrypt', fn() => new Encrypt());
-        $container->set('jwt_class', fn() => new jwt_class());
-        $container->set('mail_sender', fn() => new Mail_Sender());
-        $container->set(UserService::class, fn(ContainerInterface $container) => new UserService(
-            $container->get('database_pdo'),
-            $container->get('database_query')
-        ));
-        $container->set('env', fn() => new Env_Reader(APP_PATH . DIRECTORY_SEPARATOR . '.env'));
-        $container->set('redis', fn(ContainerInterface $container) => self::createRedis($container));
-        $container->set('cache', fn() => self::createCache());
-        $container->set('view', fn() => self::createTwig());
+        $container->set(Database_orm::class, fn() => Database_orm::init());
+        $container->set(Database_pdo::class, fn() => Database_pdo::init());
+        $container->set(Database_query::class, fn() => new Database_query());
 
-        $container->set('csv_to_database_loader', fn() => new csv_to_database_loader());
+        $container->set(Logger::class, fn() => new Logger());
+        $container->set(Encrypt::class, fn() => new Encrypt());
+        $container->set(JwtClass::class, fn() => new JwtClass());
+        $container->set(MailSender::class, fn() => new MailSender());
+        $container->set(EnvReader::class, fn() => new EnvReader(APP_PATH . DIRECTORY_SEPARATOR . '.env'));
+        $container->set(Cache::class, fn() => self::createCache());
+        $container->set(Twig::class, fn() => self::createTwig());
+        $container->set(CsvToDatabaseLoader::class, fn() => new CsvToDatabaseLoader());
+
+        $container->set(Redis::class, fn($c) => self::createRedis($c));
+        $container->set(UserService::class, fn($c) => new UserService($c));
     }
 
     private static function initializeOrmDatabase(Container $container): void
     {
-        $container->get('database_orm');
+        $container->get(Database_orm::class);
     }
 
     private static function createRedis(ContainerInterface $container): Redis
     {
-        $env_reader = $container->get('env');
+        $env_reader = $container->get(EnvReader::class);
         $host = $env_reader->getValue('REDIS_HOST');
         $port = $env_reader->getValue('REDIS_PORT');
         $password = $env_reader->getValue('REDIS_PASSWORD');
