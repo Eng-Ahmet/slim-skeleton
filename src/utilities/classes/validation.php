@@ -65,6 +65,7 @@ class Validation
     }
 
     // === Rules ===
+
     private function validateRequired(string $field, $value): void
     {
         if (is_null($value) || trim((string)$value) === '') {
@@ -122,6 +123,11 @@ class Validation
         }
     }
 
+    private function validateEnum(string $field, $value, array $allowed): void
+    {
+        $this->validateIn($field, $value, $allowed);
+    }
+
     private function validateBoolean(string $field, $value): void
     {
         if (!in_array($value, [true, false, 0, 1, '0', '1'], true)) {
@@ -146,13 +152,53 @@ class Validation
 
     private function validateUnique(string $field, $value, string $table): void
     {
-        // Assuming you have a database connection and a method to check uniqueness
-        // This is a placeholder implementation
-        $exists = false; // Replace with actual database check
+        // Placeholder: replace this with actual DB query
+        $exists = false;
 
         if ($exists) {
             $this->addError($field, "The '{$field}' field must be unique in the '{$table}' table.");
         }
     }
 
+    private function validateType(string $field, $value, string $type): void
+    {
+        switch (strtolower($type)) {
+            case 'int':
+            case 'integer':
+                if (filter_var($value, FILTER_VALIDATE_INT) === false) {
+                    $this->addError($field, "The '{$field}' field must be an integer.");
+                }
+                break;
+
+            case 'float':
+            case 'double':
+                if (filter_var($value, FILTER_VALIDATE_FLOAT) === false) {
+                    $this->addError($field, "The '{$field}' field must be a float.");
+                }
+                break;
+
+            case 'bool':
+            case 'boolean':
+                if (!in_array($value, [true, false, 0, 1, '0', '1'], true)) {
+                    $this->addError($field, "The '{$field}' field must be boolean.");
+                }
+                break;
+
+            case 'string':
+            case 'text':
+                if (!is_string($value)) {
+                    $this->addError($field, "The '{$field}' field must be a string.");
+                }
+                break;
+
+            case 'array':
+                if (!is_array($value)) {
+                    $this->addError($field, "The '{$field}' field must be an array.");
+                }
+                break;
+
+            default:
+                $this->addError($field, "Invalid type specified for '{$field}': '{$type}'.");
+        }
+    }
 }
