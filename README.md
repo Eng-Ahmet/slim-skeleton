@@ -68,3 +68,244 @@ If you encounter any issues or have questions about the project, please:
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
+
+# luma-new-back
+
+# Routing
+
+## Register
+
+## 📍 Endpoint
+
+`POST /register`
+
+## 📝 Description
+
+تُستخدم هذه النقطة لتسجيل مستخدم جديد في النظام. يجب إرسال جميع البيانات المطلوبة في جسم الطلب بصيغة JSON.
+
+---
+
+## 📤 Request Headers
+
+| Header       | Value              |
+| ------------ | ------------------ |
+| Content-Type | `application/json` |
+| Accept       | `application/json` |
+
+---
+
+## 📦 Request Body (JSON)
+
+```json
+{
+    "first_name": "Ahmed",
+    "last_name": "Al-Mutairi",
+    "email": "ahmed@example.com",
+    "phone": "+966501234567",
+    "age": 25,
+    "gender": "Male",
+    "privacy_policy": 1,
+    "country_code": "SA",
+    "country_name": "Saudi Arabia",
+    "password": "StrongPassword123",
+    "password_confirmation": "StrongPassword123",
+    "user_type": "Student"
+}
+```
+
+> 🔒 **ملاحظات:**
+>
+> -   `privacy_policy` يجب أن تكون `1` لتأكيد الموافقة على الشروط.
+> -   يجب أن تطابق `password_confirmation` كلمة المرور.
+> -   `user_type` يمكن أن تكون `Student`, `Teacher`, أو نوع آخر حسب النظام.
+
+---
+
+## ✅ Successful Response (201 Created)
+
+```json
+{
+    "status": 201,
+    "message": "OK",
+    "data": {
+        "message": "Registration successful. Please check your email to activate your account."
+    },
+    "error": null,
+    "timestamp": "2025-06-15T23:51:57+00:00",
+    "version": "1.0.0",
+    "path": "/register",
+    "user_agent": "PostmanRuntime/7.44.0",
+    "ip": "127.0.0.1",
+    "request_method": "POST",
+    "referer": "",
+    "content_type": "application/json",
+    "accept_language": "",
+    "host": "localhost",
+    "protocol": "http",
+    "original_url": "http://localhost:8000/register",
+    "query_string": "",
+    "trace_id": "c8e210a40bedc432",
+    "signature": "bb8bb838ac9aa1d36415858cf512c5e92906cf8fe9a536a39bec5cb871b66ec8"
+}
+```
+
+---
+
+## ❌ Error Response Example
+
+```json
+{
+    "status": 500,
+    "message": "Database settings array is missing or incomplete.",
+    "data": null,
+    "error": "Database settings array is missing or incomplete.",
+    "timestamp": "2025-06-15T23:55:22+00:00",
+    "version": "1.0.0",
+    "path": "/register",
+    "user_agent": "PostmanRuntime/7.44.0",
+    "ip": "127.0.0.1",
+    "request_method": "POST",
+    "referer": "",
+    "content_type": "application/json",
+    "accept_language": "",
+    "host": "localhost",
+    "protocol": "http",
+    "original_url": "http://localhost:8000/register",
+    "query_string": "",
+    "trace_id": "c583102a5254c78a",
+    "signature": "bb8bb838ac9aa1d36415858cf512c5e92906cf8fe9a536a39bec5cb871b66ec8"
+}
+```
+
+---
+
+## 📌 Notes
+
+-   يُرسل الرابط إلى البريد الإلكتروني لتفعيل الحساب بعد التسجيل.
+-   يجب أن يكون البريد الإلكتروني صالحًا ونشطًا لتلقّي رسالة التفعيل.
+-   يتم حفظ عنوان الـ IP والمعلومات الخاصة بالطلب لأغراض التتبع والأمان.
+
+---
+
+## 🧪 Example using cURL
+
+```bash
+curl -X POST http://localhost:8000/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "first_name": "Ahmed",
+    "last_name": "Al-Mutairi",
+    "email": "ahmed@example.com",
+    "phone": "+966501234567",
+    "age": 25,
+    "gender": "Male",
+    "privacy_policy": 1,
+    "country_code": "SA",
+    "country_name": "Saudi Arabia",
+    "password": "StrongPassword123",
+    "password_confirmation": "StrongPassword123",
+    "user_type": "Student"
+  }'
+```
+
+## Login
+
+## 📍 Endpoint
+
+`POST /login`
+
+## الوصف
+
+نقطة النهاية `/login` تُستخدم لتسجيل دخول المستخدمين عبر إرسال بيانات البريد الإلكتروني وكلمة المرور.  
+تقوم الخدمة بالتحقق من صحة البيانات، التحقق من حالة المستخدم، تسجيل المحاولات، وإنشاء توكن JWT في حالة النجاح.
+
+---
+
+## طلب تسجيل الدخول (Request)
+
+-   **الطريقة:** POST
+-   **الرابط:** `/login`
+-   **نوع المحتوى:** `application/json`
+
+### جسم الطلب (Body)
+
+```json
+{
+    "email": "user@example.com",
+    "password": "yourPassword123"
+}
+```
+
+-   **email**: البريد الإلكتروني للمستخدم (يجب أن يكون بصيغة صحيحة).
+-   **password**: كلمة المرور (بين 8 و 20 حرفًا).
+
+---
+
+## استجابة ناجحة (Success Response)
+
+-   **الحالة:** 200 OK
+-   **نوع المحتوى:** `application/json`
+
+### مثال على الاستجابة
+
+```json
+{
+    "status": 200,
+    "message": "OK",
+    "data": {
+        "message": "Login successful.",
+        "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
+        "expires_in": 600
+    },
+    "error": null,
+    "timestamp": "2025-06-17T13:41:52+00:00",
+    "version": "1.0.0",
+    "path": "/login",
+    "user_agent": "PostmanRuntime/7.44.0",
+    "ip": "127.0.0.1",
+    "request_method": "POST",
+    "referer": "",
+    "content_type": "application/json",
+    "accept_language": "",
+    "host": "localhost",
+    "protocol": "http",
+    "original_url": "http://localhost:8000/login",
+    "query_string": "",
+    "trace_id": "8b3b9c91f90df5d7",
+    "signature": "2db4f2843cacec2ee01ae425e0d129683446443290b7face4d5a8a51bd0b493f"
+}
+```
+
+-   **token**: رمز JWT الذي يتم استخدامه للمصادقة في الطلبات المستقبلية.
+-   **expires_in**: مدة صلاحية التوكن بالثواني (600 ثانية = 10 دقائق).
+
+---
+
+## استجابة في حالة الخطأ (Error Response)
+
+### مثال على استجابة خطأ في حالة بيانات غير صحيحة أو فشل تسجيل الدخول
+
+-   **الحالة:** 401 Unauthorized
+-   **نوع المحتوى:** `application/json`
+
+```json
+{
+    "status": 401,
+    "message": "Invalid email or password.",
+    "data": null,
+    "error": "Invalid email or password.",
+    "timestamp": "2025-06-17T13:42:54+00:00",
+    "version": "1.0.0",
+    "path": "/login",
+    "user_agent": "PostmanRuntime/7.44.0",
+    "ip": "127.0.0.1",
+    "request_method": "POST",
+    "referer": "",
+    "content_type": "application/json",
+    "accept_language": "",
+    "host": "localhost",
+    "protocol": "http",
+    "original_url": "http://localhost:8000/login",
+    "query_string": ""
+}
+```

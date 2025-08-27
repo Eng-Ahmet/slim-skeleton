@@ -4,9 +4,9 @@ use Spiral\RoadRunner\Http\PSR7Worker;
 use Spiral\RoadRunner\Worker;
 use Nyholm\Psr7\Factory\Psr17Factory;
 
-require __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/vendor/autoload.php';
 
-$app = require __DIR__ . '/public/index.php'; // يُعيد $app
+$app = require_once __DIR__ . '/public/index.php';
 
 $psr17Factory = new Psr17Factory();
 

@@ -23,11 +23,11 @@ if (!defined('API_URL')) {
 }
 
 if (!defined('Excluded_Route')) {
-    define("Excluded_Route", []);
+    define("Excluded_Route", ["/register", "/login", "/logout", "/reset-password", "/verify-email", "/resend-verification-email"]);
 }
 
 if (!defined('Get_Routes_With_Token')) {
     define("Get_Routes_With_Token", []);
 }
 
-require APP_PATH . DS . "vendor" . DS . "autoload.php";
+require_once APP_PATH . DS . "vendor" . DS . "autoload.php";

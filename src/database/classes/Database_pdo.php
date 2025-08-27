@@ -4,44 +4,34 @@ declare(strict_types=1);
 
 namespace API\src\database\classes;
 
+use API\src\utilities\classes\EnvReader;
 use PDO;
 
 class Database_pdo
 {
     public static function init()
     {
-        // Load database settings
-        $settingsPath = APP_PATH . DS . "src" . DS . "database" . DS . "config" . DS . "db_pdo_setting.php";
-        if (!file_exists($settingsPath)) {
-            throw new \Exception("Database settings file not found at: " . $settingsPath);
-        }
+        $env = new EnvReader(APP_PATH . '/.env');
 
-        $settings = require $settingsPath;
+        $dbSettings = [
+            'host' => $env->getValue('DB_HOST'),
+            'database' => $env->getValue('DB_NAME'),
+            'username' => $env->getValue('DB_USER'),
+            'password' => $env->getValue('DB_PASSWORD'),
+            'charset' => 'utf8mb4',
+        ];
 
-        // Check if settings array is properly defined
-        if (!isset($settings['settings']['db'])) {
-            throw new \Exception("Database settings array is missing or incomplete.");
-        }
+        $options = [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        ];
 
-        // Extract database settings
-        $dbSettings = $settings['settings']['db'];
+        $dsn = "mysql:host={$dbSettings['host']};dbname={$dbSettings['database']};charset={$dbSettings['charset']}";
 
-        // Extract connection options
-        $options = isset($settings['settings']['options']) ? $settings['settings']['options'] : [];
-
-        // Extract database connection parameters
-        $host = $dbSettings['host'];
-        $db = $dbSettings['database'];
-        $user = $dbSettings['username'];
-        $pass = $dbSettings['password'];
-        $charset = $dbSettings['charset'];
-
-        // Construct DSN string
-        $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
 
         try {
             // Create PDO connection
-            $pdo = new PDO($dsn, $user, $pass, $options);
+            $pdo = new PDO($dsn, $dbSettings['username'], $dbSettings['password'], $options);
             return $pdo;
         } catch (\PDOException $e) {
             // Handle PDO exceptions

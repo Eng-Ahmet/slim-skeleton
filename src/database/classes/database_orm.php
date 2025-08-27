@@ -5,22 +5,27 @@ declare(strict_types=1);
 namespace API\src\database\classes;
 
 use Illuminate\Database\Capsule\Manager;
+use API\src\utilities\classes\EnvReader;
 
 class Database_orm
 {
     public static function init()
     {
-        // Load database settings
+        $env = new EnvReader(APP_PATH . '/.env');
 
-        $settingsPath = APP_PATH . DS . "src" . DS . "database" . DS . "config" . DS . "db_orm_setting.php";
-        if (!file_exists($settingsPath)) {
-            throw new \Exception("Database settings file not found at: " . $settingsPath);
-        }
-        $dbSettings = require_once $settingsPath;
-        
-        // Initialize Eloquent
+        $dbSettings = [
+            'driver' => 'mysql',
+            'host' => $env->getValue('DB_HOST'),
+            'database' => $env->getValue('DB_NAME'),
+            'username' => $env->getValue('DB_USER'),
+            'password' => $env->getValue('DB_PASSWORD'),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+        ];
+
         $capsule = new Manager();
-        $capsule->addConnection($dbSettings['settings']['db']);
+        $capsule->addConnection($dbSettings);
         $capsule->setAsGlobal();
         $capsule->bootEloquent();
 

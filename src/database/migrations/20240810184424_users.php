@@ -42,12 +42,17 @@ final class Users extends AbstractMigration
             ->addColumn('gender', 'enum', ['values' => ['Male', 'Female', 'Other'], 'default' => 'Other', 'null' => false])
             ->addColumn('status', 'enum', ['values' => ['Active', 'Inactive', 'Suspended', 'Blocked', 'Deleted', 'Pending'], 'default' => 'Inactive', 'null' => false])
             ->addColumn('account_type', 'enum', ['values' => ['VIP', 'Normal'], 'default' => 'Normal', 'null' => false])
-            ->addColumn('user_type', 'enum', ['values' => ['Teacher', 'Student', 'Admin'], 'default' => 'Student', 'null' => false])
-            ->addColumn('login_attempts', 'integer', ['default' => 0, 'null' => false])
+            ->addColumn('user_type', 'enum', ['values' => ['Admin', "Moderator", 'Teacher', 'Student'], 'default' => 'Student', 'null' => false])
+            
+            ->addColumn('is_verified', 'boolean', ['default' => false, 'null' => false])
+            ->addColumn('verification_code', 'string', ['limit' => 100, 'null' => true])
+           
             ->addColumn('preferences', 'json', ['null' => true])
+            
             ->addColumn('last_login', 'datetime', ['null' => false, 'default' => 'CURRENT_TIMESTAMP'])
             ->addColumn('ip_address', 'string', ['limit' => 50, 'null' => true])
             ->addColumn('last_ip_address', 'string', ['limit' => 50, 'null' => true])
+           
             ->addColumn('created_at', 'datetime')
             ->addColumn('updated_at', 'datetime', ['null' => true])
             ->create();

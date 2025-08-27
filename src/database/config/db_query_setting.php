@@ -12,7 +12,7 @@ return [
         'db' => [
             'driver' => 'mysql',
             'host' => 'localhost',
-            'database' => 'db_name',
+            'database' => 'luma-new',
             'username' => 'root',
             'password' => '',
             'charset'   => 'utf8mb4',

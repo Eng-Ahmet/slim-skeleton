@@ -46,6 +46,7 @@ class Middleware
         $app->add(new TokenMiddleware(Excluded_Route, Get_Routes_With_Token));
         $app->add(new FileUploadMiddleware(['image/jpeg', 'image/jpg', 'image/png'], 25 * 1024 * 1024, 4));
         $app->add(new SanitizeMiddleware());
+        $app->addBodyParsingMiddleware();
 
 
         // ميدلويرات الخطأ

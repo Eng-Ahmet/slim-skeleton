@@ -11,9 +11,9 @@ class Validation
     private array $errors = [];
     private array $data = [];
 
-    public function __construct(ServerRequestInterface $request)
+    public function setData(array $data): void
     {
-        $this->data = $request->getParsedBody() ?? [];
+        $this->data = $data;
     }
 
     public function validate(array $rules): bool
@@ -65,7 +65,6 @@ class Validation
     }
 
     // === Rules ===
-
     private function validateRequired(string $field, $value): void
     {
         if (is_null($value) || trim((string)$value) === '') {
@@ -123,14 +122,9 @@ class Validation
         }
     }
 
-    private function validateEnum(string $field, $value, array $allowed): void
-    {
-        $this->validateIn($field, $value, $allowed);
-    }
-
     private function validateBoolean(string $field, $value): void
     {
-        if (!in_array($value, [true, false, 0, 1, '0', '1'], true)) {
+        if (!in_array($value, [true, false, 0, 1, '0', '1',"true",], true)) {
             $this->addError($field, "The '{$field}' field must be boolean.");
         }
     }
@@ -152,53 +146,80 @@ class Validation
 
     private function validateUnique(string $field, $value, string $table): void
     {
-        // Placeholder: replace this with actual DB query
-        $exists = false;
+        // Assuming you have a database connection and a method to check uniqueness
+        // This is a placeholder implementation
+        $exists = false; // Replace with actual database check
 
         if ($exists) {
             $this->addError($field, "The '{$field}' field must be unique in the '{$table}' table.");
         }
     }
 
-    private function validateType(string $field, $value, string $type): void
+    private function validateString(string $field, $value): void
     {
-        switch (strtolower($type)) {
-            case 'int':
-            case 'integer':
-                if (filter_var($value, FILTER_VALIDATE_INT) === false) {
-                    $this->addError($field, "The '{$field}' field must be an integer.");
-                }
-                break;
+        if (!is_string($value)) {
+            $this->addError($field, "The '{$field}' field must be a string.");
+        }
+    }
 
-            case 'float':
-            case 'double':
-                if (filter_var($value, FILTER_VALIDATE_FLOAT) === false) {
-                    $this->addError($field, "The '{$field}' field must be a float.");
-                }
-                break;
+    private function validateInteger(string $field, $value): void
+    {
+        if (!filter_var($value, FILTER_VALIDATE_INT)) {
+            $this->addError($field, "The '{$field}' field must be an integer.");
+        }
+    }
 
-            case 'bool':
-            case 'boolean':
-                if (!in_array($value, [true, false, 0, 1, '0', '1'], true)) {
-                    $this->addError($field, "The '{$field}' field must be boolean.");
-                }
-                break;
-
-            case 'string':
-            case 'text':
-                if (!is_string($value)) {
-                    $this->addError($field, "The '{$field}' field must be a string.");
-                }
-                break;
-
-            case 'array':
-                if (!is_array($value)) {
-                    $this->addError($field, "The '{$field}' field must be an array.");
-                }
-                break;
-
-            default:
-                $this->addError($field, "Invalid type specified for '{$field}': '{$type}'.");
+    private function validateBetween(string $field, $value, array $range): void
+    {
+        $min = $range[0];
+        $max = $range[1];
+        if (!is_numeric($value) || $value < $min || $value > $max) {
+            $this->addError($field, "The '{$field}' field must be between {$min} and {$max}.");
+        }
+    }
+    private function validateNullable(string $field, $value): void
+    {
+        // This rule allows the field to be null or empty, so no action needed
+        if ($value === null || $value === '') {
+            return;
+        }
+        // If the field is not null or empty, you can apply other validations if needed
+    }
+    private function validateArray(string $field, $value): void
+    {
+        if (!is_array($value)) {
+            $this->addError($field, "The '{$field}' field must be an array.");
+        }
+    }
+    private function validateFile(string $field, $value): void
+    {
+        if (!is_array($value) || !isset($value['tmp_name']) || !file_exists($value['tmp_name'])) {
+            $this->addError($field, "The '{$field}' field must be a valid file.");
+        }
+    }
+    private function validateUrl(string $field, $value): void
+    {
+        if (!filter_var($value, FILTER_VALIDATE_URL)) {
+            $this->addError($field, "The '{$field}' field must be a valid URL.");
+        }
+    }
+    private function validateIp(string $field, $value): void
+    {
+        if (!filter_var($value, FILTER_VALIDATE_IP)) {
+            $this->addError($field, "The '{$field}' field must be a valid IP address.");
+        }
+    }
+    private function validateJson(string $field, $value): void
+    {
+        json_decode($value);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            $this->addError($field, "The '{$field}' field must be a valid JSON string.");
+        }
+    }
+    private function validateUuid(string $field, $value): void
+    {
+        if (!preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i', $value)) {
+            $this->addError($field, "The '{$field}' field must be a valid UUID.");
         }
     }
 }

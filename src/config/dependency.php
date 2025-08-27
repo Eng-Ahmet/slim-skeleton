@@ -17,6 +17,7 @@ use API\src\utilities\classes\JwtClass;
 use API\src\utilities\classes\Logger;
 use API\src\utilities\classes\MailSender;
 use API\src\utilities\classes\Redis;
+use API\src\utilities\classes\Validation;
 use Psr\Container\ContainerInterface;
 use Slim\Views\Twig;
 use Twig\Loader\FilesystemLoader;
@@ -35,6 +36,7 @@ final class Dependency
 
     private static function registerServices(Container $container): void
     {
+
         $container->set(Database_orm::class, fn() => Database_orm::init());
         $container->set(Database_pdo::class, fn() => Database_pdo::init());
         $container->set(Database_query::class, fn() => new Database_query());
@@ -43,13 +45,22 @@ final class Dependency
         $container->set(Encrypt::class, fn() => new Encrypt());
         $container->set(JwtClass::class, fn() => new JwtClass());
         $container->set(MailSender::class, fn() => new MailSender());
-        $container->set(EnvReader::class, fn() => new EnvReader(APP_PATH . DIRECTORY_SEPARATOR . '.env'));
+        $container->set(EnvReader::class, static function (): EnvReader {
+            static $env = null;
+
+            if ($env === null) {
+                $env = new EnvReader(APP_PATH . DIRECTORY_SEPARATOR . '.env');
+            }
+
+            return $env;
+        });
         $container->set(Cache::class, fn() => self::createCache());
         $container->set(Twig::class, fn() => self::createTwig());
         $container->set(CsvToDatabaseLoader::class, fn() => new CsvToDatabaseLoader());
 
         $container->set(Redis::class, fn($c) => self::createRedis($c));
         $container->set(UserService::class, fn($c) => new UserService($c));
+        $container->set(Validation::class,  fn() => new Validation());
     }
 
     private static function initializeOrmDatabase(Container $container): void
